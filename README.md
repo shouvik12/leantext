@@ -18,20 +18,67 @@ tokenizer: tiktoken
 
 ## Quickstart
 
-```bash
-brew install tesseract poppler          # or: apt install tesseract-ocr poppler-utils
-pip install git+https://github.com/shouvik12/leantext
+**1. Install the OCR and PDF tools**
 
+```bash
+brew install tesseract poppler          # macOS
+sudo apt install tesseract-ocr poppler-utils   # Debian / Ubuntu
+```
+
+**2. Install leantext** in its own environment, so it's on your `PATH` and the hook can find it:
+
+```bash
+pipx install "leantext[tokens] @ git+https://github.com/shouvik12/leantext"
+```
+
+or, with [uv](https://docs.astral.sh/uv/):
+
+```bash
+uv tool install "leantext[tokens] @ git+https://github.com/shouvik12/leantext"
+```
+
+The `tokens` extra adds tiktoken for accurate token counts. Use `leantext[tokens,anthropic]` for the vision fallback and exact Claude counts; those need `ANTHROPIC_API_KEY`.
+
+> A bare `pip install` into Homebrew's Python fails with `externally-managed-environment`. Use pipx, uv, or a virtual environment.
+
+**3. Try it**
+
+```bash
 leantext https://docs.python.org/3/tutorial/controlflow.html   # web page
 leantext paper.pdf                                             # text or scanned PDF
 leantext screenshot.png                                        # OCR, vision only if OCR is weak
 leantext spec.docx                                             # Office files
+leantext https://pypi.org/project/numpy/ --report > /dev/null  # see the savings
 ```
 
 ### Inside Claude Code
 
+**1. Generate the hook config:**
+
 ```bash
-leantext hook-config     # prints a snippet; merge it into .claude/settings.json
+leantext hook-config > /tmp/leantext-hook.json
+```
+
+**2. Install it.** Use `~/.claude/settings.json` for every project, or `.claude/settings.json` inside one repo.
+
+If you don't have a settings file yet, copy it in:
+
+```bash
+mkdir -p ~/.claude && cp -n /tmp/leantext-hook.json ~/.claude/settings.json
+```
+
+If you already have one, add the `hooks` block from `/tmp/leantext-hook.json` to it. With `jq`:
+
+```bash
+jq -s '.[0] * .[1]' ~/.claude/settings.json /tmp/leantext-hook.json > /tmp/merged.json && mv /tmp/merged.json ~/.claude/settings.json
+```
+
+(This replaces any existing `PreToolUse` hooks, so merge by hand if you already have some.)
+
+**3. Check it's working.** After the agent reads a web page or document:
+
+```bash
+tail -3 ~/.cache/leantext/hook.jsonl
 ```
 
 | The agent does | The hook does |
