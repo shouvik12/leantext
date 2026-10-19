@@ -195,7 +195,6 @@ leantext URL|PATH|-  [--report]           # Markdown on stdout, report on stderr
   --no-cache
 ```
 
-Also installed as the short alias `md`.
 
 | Exit code | Meaning |
 |---|---|

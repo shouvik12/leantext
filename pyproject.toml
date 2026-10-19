@@ -26,7 +26,6 @@ dev = ["pytest>=8", "reportlab>=4"]
 
 [project.scripts]
 leantext = "leantext.cli:main"
-md = "leantext.cli:main"
 leantext-hook = "leantext.hook:main"
 
 [tool.setuptools.packages.find]
