@@ -11,7 +11,9 @@
 ```bash
 $ leantext https://pypi.org/project/numpy/ --report > numpy.md
 leantext report  (html, via trafilatura, dropped 90 hidden)
-  raw HTML        63,307  ->  829   99% saved
+tokenizer: tiktoken
+  raw HTML                        263,562  ->      755   100% saved
+  naive Markdown (whole page)      92,345  ->      755   99% saved
 ```
 
 ## Quickstart
