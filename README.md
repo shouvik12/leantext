@@ -176,6 +176,7 @@ The report shows two baselines for web pages. Raw HTML is the flattering one. Wh
 
 ## Known limits
 
+- **PyPI sidebars** (latest version, supported Python versions, release date) are dropped. Check them on the page or with `pip index versions <pkg>`.
 - **Client-rendered sites** (React apps, dashboards) ship an empty shell, so a plain fetch can't see their content. leantext flags this rather than pretending. Live-tab mode will fix it.
 - **Bot walls** (Cloudflare, PyPI's challenge) exit 2. Save the page from your browser and pass the `.html` file.
 - **Some data tables** (Wikipedia) and **code inside JavaScript components** (react.dev) can be dropped. Both are detected, and the original goes through.
