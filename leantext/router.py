@@ -2,7 +2,6 @@
 from __future__ import annotations
 
 import json
-import multiprocessing as mp
 import os
 import re
 import sys
@@ -16,7 +15,7 @@ from .extractors import html as html_x
 from .extractors import image as image_x
 from .extractors import pdf as pdf_x
 
-VERSION_SALT = "leantext-0.2.3"
+VERSION_SALT = "leantext-0.2.4"
 UA = "Mozilla/5.0 (compatible; leantext/0.2; +https://github.com/shouvik12/leantext)"
 MAX_BYTES = 25 * 1024 * 1024
 
@@ -180,40 +179,44 @@ def _raw_result(kind: str, target: str, raw: bytes | None, path: str | None, rea
     return Result(md, kind, method, target, raw=True, fallback=reason)
 
 
-def _worker(args, conn) -> None:
-    try:
-        conn.send(("ok", _extract(*args)))
-    except Exception as e:  # noqa: BLE001
-        conn.send(("err", f"{type(e).__name__}: {e}"))
-    finally:
-        conn.close()
-
-
 def _extract_bounded(args: tuple, budget: float) -> Result:
-    """Run _extract in its own process so a hung extractor can be killed, not just abandoned."""
-    ctx = mp.get_context("spawn" if sys.platform in ("darwin", "win32") else "fork")
-    parent, child = ctx.Pipe(duplex=False)
-    proc = ctx.Process(target=_worker, args=(args, child), daemon=True)
-    proc.start()
-    child.close()
+    """Run _extract in a separate interpreter so a hung extractor can be killed, not abandoned.
+
+    A plain subprocess (python -m leantext.router --worker), not multiprocessing: spawn mode
+    re-runs the caller's __main__ script in the child, which breaks stdin/REPL/notebook callers
+    and re-executes unguarded user scripts.
+    """
+    import pickle
+    import subprocess
+
     try:
-        if not parent.poll(budget):
-            raise TimeoutError(f"extraction exceeded {budget:.0f}s budget")
-        try:
-            status, payload = parent.recv()
-        except EOFError:
-            raise RuntimeError("extractor crashed") from None
-    finally:
-        if proc.is_alive():
-            proc.terminate()
-            proc.join(1)
-            if proc.is_alive():
-                proc.kill()
-        proc.join(1)
-        parent.close()
+        proc = subprocess.run([sys.executable, "-m", "leantext.router", "--worker"],
+                              input=pickle.dumps(args), capture_output=True, timeout=budget)
+    except subprocess.TimeoutExpired:
+        raise TimeoutError(f"extraction exceeded {budget:.0f}s budget") from None
+    if proc.returncode != 0 or not proc.stdout:
+        err = proc.stderr.decode("utf-8", "replace").strip().splitlines()
+        raise RuntimeError(err[-1] if err else f"extractor exited {proc.returncode}")
+    status, payload = pickle.loads(proc.stdout)
     if status == "err":
         raise RuntimeError(payload)
     return payload
+
+
+def _worker_main() -> None:
+    import pickle
+
+    # Import under the real module name, so Result pickles as leantext.router.Result
+    # rather than __main__.Result, which the parent couldn't load.
+    from leantext import router
+
+    args = pickle.loads(sys.stdin.buffer.read())
+    try:
+        out = ("ok", router._extract(*args))
+    except Exception as e:  # noqa: BLE001
+        out = ("err", f"{type(e).__name__}: {e}")
+    sys.stdout.buffer.write(pickle.dumps(out))
+    sys.stdout.buffer.flush()
 
 
 def _log(res: Result, baseline: int | None) -> None:
@@ -418,3 +421,7 @@ def _extract(kind, target, raw, path, raw_mode, allow_vision, keep_hidden=False)
 
     text = raw.decode("utf-8", "replace")
     return Result(text, "text", "passthrough", src)
+
+
+if __name__ == "__main__" and "--worker" in sys.argv:
+    _worker_main()
