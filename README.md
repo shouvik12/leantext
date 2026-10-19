@@ -1,4 +1,4 @@
-# leantext
+<p align="center"><img src="assets/logo.svg" alt="leantext" width="360"></p>
 
 **Everything your coding agent reads, as lean Markdown. Fewer tokens, same answers, and when it can't convert safely, it steps aside.**
 
