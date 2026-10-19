@@ -1,0 +1,1 @@
+{"ts": 1792385713.193, "tool": "Read", "target": "/tmp/lt-pdf-scanned-on-u9wtul46/invoice.pdf", "route": "pdf-scanned->ocr", "ms": 1253, "tokens_before_est": 2318, "tokens_after": 49, "tokenizer": "estimate", "action": "mediated", "converted": "/tmp/lt-pdf-scanned-on-u9wtul46/.ltcache/reads/invoice.132f43a79757e04c.md"}

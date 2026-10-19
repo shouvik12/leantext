@@ -1,0 +1,2 @@
+{"ts": 1792385728.171, "tool": "Read", "target": "/tmp/lt-shot-table-on-4nx19qi8/table.png", "route": "ocr(conf=88, low=11%)", "ms": 1995, "tokens_before_est": 1999, "tokens_after": 87, "tokenizer": "estimate", "action": "mediated", "converted": "/tmp/lt-shot-table-on-4nx19qi8/.ltcache/reads/table.454abe34565a5e1e.md"}
+{"ts": 1792385732.142, "tool": "Read", "target": "/tmp/lt-shot-table-on-4nx19qi8/table.png", "action": "passthrough", "reason": "re-read: agent asked for the original"}

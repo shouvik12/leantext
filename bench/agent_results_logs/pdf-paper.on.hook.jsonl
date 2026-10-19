@@ -1,0 +1,1 @@
+{"ts": 1792385697.232, "tool": "Read", "target": "/tmp/lt-pdf-paper-on-2brbnmpb/paper.pdf", "route": "pdftotext", "ms": 1433, "tokens_before_est": 35462, "tokens_after": 20692, "tokenizer": "estimate", "action": "mediated", "converted": "/tmp/lt-pdf-paper-on-2brbnmpb/.ltcache/reads/paper.3662ff519e485810.md"}

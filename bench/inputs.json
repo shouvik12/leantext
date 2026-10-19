@@ -1,0 +1,14 @@
+[
+  {"id": "blog-retries", "source": "tests/fixtures/blog.html",
+   "question": "What share of requests should retries be capped at, and what does the Go snippet return when the budget is exhausted?",
+   "expect": ["10\\s*%", "errBudgetExhausted"]},
+  {"id": "pdf-infra", "source": "tests/fixtures/report.pdf",
+   "question": "What was median API latency after the connection-pool change, and what retention is recommended for debug logs?",
+   "expect": ["141\\s*ms", "30 days"]},
+  {"id": "pdf-scanned-invoice", "source": "tests/fixtures/scanned.pdf",
+   "question": "What is the invoice number and the total due?",
+   "expect": ["2026-0417", "1,?140"]},
+  {"id": "screenshot-build", "source": "tests/fixtures/screenshot.png",
+   "question": "Which TypeScript error code failed the build, and in which file and line?",
+   "expect": ["TS2339", "spotlight\\.ts:42"]}
+]

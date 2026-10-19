@@ -1,0 +1,23 @@
+[
+  {"id": "pypi-uv", "source": "tests/fixtures/real/pypi-uv.html",
+   "question": "What is the one-line command to install uv on macOS and Linux?",
+   "expect": ["astral\\.sh/uv/install\\.sh"]},
+  {"id": "pypi-numpy", "source": "tests/fixtures/real/pypi-numpy.html",
+   "question": "Which two packages does NumPy require to run its tests?",
+   "expect": ["pytest", "hypothesis"]},
+  {"id": "paper-tracemonkey", "source": "tests/fixtures/real/compressed.tracemonkey-pldi-09.pdf",
+   "question": "What speedup do the authors report for certain benchmark programs?",
+   "expect": ["10\\s*(x|×|times)|tenfold"]},
+  {"id": "shot-rich-table", "source": "tests/fixtures/real/rich-table.png",
+   "question": "What box office figure is shown for The Last Jedi?",
+   "expect": ["1,332,539,889"]},
+  {"id": "shot-rich-traceback", "source": "tests/fixtures/real/rich-traceback.png",
+   "question": "Which exception was raised, and what is the value of `result` in the first locals panel?",
+   "expect": ["ZeroDivisionError", "65536"]},
+  {"id": "shot-rich-syntax", "source": "tests/fixtures/real/rich-syntax.png",
+   "question": "What is the name of the function shown in the screenshot?",
+   "expect": ["iter_first_last"]},
+  {"id": "shot-rich-markdown", "source": "tests/fixtures/real/rich-markdown.png",
+   "question": "What is the heading at the top of the rendered Markdown?",
+   "expect": ["\\bRich\\b"]}
+]

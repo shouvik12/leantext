@@ -1,0 +1,2 @@
+{"ts": 1792385751.063, "tool": "Read", "target": "/tmp/lt-shot-traceback-on-1dmocu_y/traceback.png", "route": "ocr(conf=92, low=2%)", "ms": 5143, "tokens_before_est": 3063, "tokens_after": 251, "tokenizer": "estimate", "action": "mediated", "converted": "/tmp/lt-shot-traceback-on-1dmocu_y/.ltcache/reads/traceback.e125bdcaae65152a.md"}
+{"ts": 1792385755.6, "tool": "Read", "target": "/tmp/lt-shot-traceback-on-1dmocu_y/traceback.png", "action": "passthrough", "reason": "re-read: agent asked for the original"}

@@ -1,0 +1,2 @@
+{"ts": 1792385824.202, "tool": "Bash", "target": "http://127.0.0.1:46373/tests/fixtures/real/pypi-numpy.html", "action": "rewritten", "command": "curl -s http://127.0.0.1:46373/tests/fixtures/real/pypi-numpy.html | grep -i -A5 \"test\" | grep -i -E \"pytest|hypothesis\" | head -50"}
+{"ts": 1792385825.637, "tool": "Bash", "target": "http://127.0.0.1:46373/tests/fixtures/real/pypi-numpy.html", "action": "mediated", "route": "trafilatura, dropped 90 hidden", "tokens_after": 829, "tokenizer": "estimate", "tokens_before_est": 238336}

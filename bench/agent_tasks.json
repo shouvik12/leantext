@@ -1,0 +1,71 @@
+[
+ {
+  "id": "pdf-paper",
+  "files": [
+   "tests/fixtures/real/compressed.tracemonkey-pldi-09.pdf:paper.pdf"
+  ],
+  "prompt": "Read paper.pdf. What speedup do the authors report for certain benchmark programs? Answer in one sentence.",
+  "expect": [
+   "\\b(1\\d|2\\d)(\\.\\d+)?\\s*(x|×|times)|tenfold"
+  ],
+  "note": "any reported speedup of 10x or more counts (the abstract says '10x and more'; the evaluation reports 2x-20x, up to 25x)"
+ },
+ {
+  "id": "pdf-scanned",
+  "files": [
+   "tests/fixtures/scanned.pdf:invoice.pdf"
+  ],
+  "prompt": "Read invoice.pdf. What is the invoice number and the total due? Answer in one sentence.",
+  "expect": [
+   "2026-0417",
+   "1,?140"
+  ]
+ },
+ {
+  "id": "shot-table",
+  "files": [
+   "tests/fixtures/real/rich-table.png:table.png"
+  ],
+  "prompt": "Read table.png. What box office figure is shown for The Last Jedi? Answer with the figure only.",
+  "expect": [
+   "1,332,539,889"
+  ]
+ },
+ {
+  "id": "shot-traceback",
+  "files": [
+   "tests/fixtures/real/rich-traceback.png:traceback.png"
+  ],
+  "prompt": "Read traceback.png. Which exception was raised, and what is the value of `result` in the first locals panel? Answer in one sentence.",
+  "expect": [
+   "ZeroDivisionError",
+   "65536"
+  ]
+ },
+ {
+  "id": "curl-uv",
+  "serve": "tests/fixtures/real/pypi-uv.html",
+  "prompt": "Use curl in Bash to fetch {url} and tell me the one-line command to install uv on macOS and Linux. Answer with the command only.",
+  "expect": [
+   "astral\\.sh/uv/install\\.sh"
+  ]
+ },
+ {
+  "id": "curl-numpy",
+  "serve": "tests/fixtures/real/pypi-numpy.html",
+  "prompt": "Use curl in Bash to fetch {url}. Which two packages does NumPy require to run its tests? Answer in one sentence.",
+  "expect": [
+   "pytest",
+   "hypothesis"
+  ]
+ },
+ {
+  "id": "curl-botwall",
+  "serve": "tests/fixtures/real/pypi-challenge.html",
+  "prompt": "Use curl in Bash to fetch {url}. Does the page contain the project's description, or something else? Answer in one sentence.",
+  "expect": [
+   "challenge|javascript|bot|verif|not .*description|no.*description"
+  ],
+  "note": "recovery case: leantext must fail open and the agent must still see what the page really is"
+ }
+]

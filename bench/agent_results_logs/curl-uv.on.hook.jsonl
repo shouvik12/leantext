@@ -1,0 +1,2 @@
+{"ts": 1792385780.792, "tool": "Bash", "target": "http://127.0.0.1:46373/tests/fixtures/real/pypi-uv.html", "action": "rewritten", "command": "curl -s http://127.0.0.1:46373/tests/fixtures/real/pypi-uv.html | grep -o 'curl[^<\"]*uv[^<\"]*sh[^<\"]*' | head -5"}
+{"ts": 1792385781.688, "tool": "Bash", "target": "http://127.0.0.1:46373/tests/fixtures/real/pypi-uv.html", "action": "mediated", "route": "trafilatura, dropped 47 hidden", "tokens_after": 2286, "tokenizer": "estimate", "tokens_before_est": 141737}

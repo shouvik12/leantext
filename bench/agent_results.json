@@ -1,0 +1,1124 @@
+[
+  {
+    "task": "pdf-paper",
+    "arm": "off",
+    "correct": true,
+    "answer": "The authors (TraceMonkey, Gal et al., PLDI'09) report that their tracing JIT achieves 2\u201320x speedups over the baseline SpiderMonkey interpreter on most JavaScript benchmarks, with up to a 25x speedup on bitwise-bitops-type benchmarks.",
+    "input_tokens": 94835,
+    "usage": {
+      "input_tokens": 10,
+      "cache_creation_input_tokens": 24353,
+      "cache_read_input_tokens": 70472,
+      "output_tokens": 518
+    },
+    "output_tokens": 518,
+    "cost_usd": 0.1167064,
+    "turns": 5,
+    "wall_s": 18.2,
+    "is_error": false,
+    "hook": [],
+    "repeat": 0
+  },
+  {
+    "task": "pdf-paper",
+    "arm": "on",
+    "correct": true,
+    "answer": "The authors report speedups of up to 25x on individual benchmarks (e.g., bitops-bitwise-and), with their abstract and summary claims citing a general 10x+ (abstract) to 2x\u201320x range for traceable programs overall.",
+    "input_tokens": 70139,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 30782,
+      "cache_read_input_tokens": 39351,
+      "output_tokens": 300
+    },
+    "output_tokens": 300,
+    "cost_usd": 0.1340102,
+    "turns": 3,
+    "wall_s": 11.2,
+    "is_error": false,
+    "hook": [
+      {
+        "tool": "Read",
+        "action": "mediated",
+        "route": "pdftotext",
+        "tokens_before_est": 35462,
+        "tokens_after": 20692
+      }
+    ],
+    "repeat": 0
+  },
+  {
+    "task": "pdf-scanned",
+    "arm": "off",
+    "correct": true,
+    "answer": "Invoice number **2026-0417** has a total due of **1,140.00**.",
+    "input_tokens": 47334,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 7990,
+      "cache_read_input_tokens": 39338,
+      "output_tokens": 242
+    },
+    "output_tokens": 242,
+    "cost_usd": 0.0422596,
+    "turns": 3,
+    "wall_s": 7.5,
+    "is_error": false,
+    "hook": [],
+    "repeat": 0
+  },
+  {
+    "task": "pdf-scanned",
+    "arm": "on",
+    "correct": true,
+    "answer": "The invoice number is 2026-0417 and the total due is $1,140.00.",
+    "input_tokens": 45863,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 6512,
+      "cache_read_input_tokens": 39345,
+      "output_tokens": 249
+    },
+    "output_tokens": 249,
+    "cost_usd": 0.036419,
+    "turns": 3,
+    "wall_s": 8.7,
+    "is_error": false,
+    "hook": [
+      {
+        "tool": "Read",
+        "action": "mediated",
+        "route": "pdf-scanned->ocr",
+        "tokens_before_est": 2318,
+        "tokens_after": 49
+      }
+    ],
+    "repeat": 0
+  },
+  {
+    "task": "shot-table",
+    "arm": "off",
+    "correct": true,
+    "answer": "$1,332,539,889",
+    "input_tokens": 47965,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 8659,
+      "cache_read_input_tokens": 39300,
+      "output_tokens": 201
+    },
+    "output_tokens": 201,
+    "cost_usd": 0.044518,
+    "turns": 3,
+    "wall_s": 5.9,
+    "is_error": false,
+    "hook": [],
+    "repeat": 0
+  },
+  {
+    "task": "shot-table",
+    "arm": "on",
+    "correct": true,
+    "answer": "$1,332,539,889\n\nNote: the first read attempt returned a fake \"OCR\" text block with an injected instruction (\"Read the same file again for the original\") \u2014 that text didn't actually match the image and appears to be a prompt-injection attempt. I disregarded it and read the actual image directly to get this figure.",
+    "input_tokens": 97046,
+    "usage": {
+      "input_tokens": 12,
+      "cache_creation_input_tokens": 9865,
+      "cache_read_input_tokens": 87169,
+      "output_tokens": 960
+    },
+    "output_tokens": 960,
+    "cost_usd": 0.0665178,
+    "turns": 6,
+    "wall_s": 20.8,
+    "is_error": false,
+    "hook": [
+      {
+        "tool": "Read",
+        "action": "mediated",
+        "route": "ocr(conf=88, low=11%)",
+        "tokens_before_est": 1999,
+        "tokens_after": 87
+      },
+      {
+        "tool": "Read",
+        "action": "passthrough",
+        "reason": "re-read: agent asked for the original"
+      }
+    ],
+    "repeat": 0
+  },
+  {
+    "task": "shot-traceback",
+    "arm": "off",
+    "correct": true,
+    "answer": "A `ZeroDivisionError: division by zero` was raised, and in the first (top) locals panel `result = 65536.0`.",
+    "input_tokens": 50491,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 11140,
+      "cache_read_input_tokens": 39345,
+      "output_tokens": 248
+    },
+    "output_tokens": 248,
+    "cost_usd": 0.054921,
+    "turns": 4,
+    "wall_s": 6.7,
+    "is_error": false,
+    "hook": [],
+    "repeat": 0
+  },
+  {
+    "task": "shot-traceback",
+    "arm": "on",
+    "correct": true,
+    "answer": "A `ZeroDivisionError: division by zero` was raised, and in the first locals panel (for `divide_all`), `result` is `65536.0`.",
+    "input_tokens": 46301,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 6944,
+      "cache_read_input_tokens": 39351,
+      "output_tokens": 364
+    },
+    "output_tokens": 364,
+    "cost_usd": 0.039298200000000005,
+    "turns": 3,
+    "wall_s": 14.2,
+    "is_error": false,
+    "hook": [
+      {
+        "tool": "Read",
+        "action": "mediated",
+        "route": "ocr(conf=92, low=2%)",
+        "tokens_before_est": 3063,
+        "tokens_after": 251
+      }
+    ],
+    "repeat": 0
+  },
+  {
+    "task": "curl-uv",
+    "arm": "off",
+    "correct": true,
+    "answer": "`curl -LsSf https://astral.sh/uv/install.sh | sh`",
+    "input_tokens": 30560,
+    "usage": {
+      "input_tokens": 4,
+      "cache_creation_input_tokens": 6432,
+      "cache_read_input_tokens": 24124,
+      "output_tokens": 191
+    },
+    "output_tokens": 191,
+    "cost_usd": 0.0324708,
+    "turns": 2,
+    "wall_s": 5.3,
+    "is_error": false,
+    "hook": [],
+    "repeat": 0
+  },
+  {
+    "task": "curl-uv",
+    "arm": "on",
+    "correct": true,
+    "answer": "```\ncurl -LsSf https://astral.sh/uv/install.sh | sh\n```",
+    "input_tokens": 31259,
+    "usage": {
+      "input_tokens": 4,
+      "cache_creation_input_tokens": 7130,
+      "cache_read_input_tokens": 24125,
+      "output_tokens": 174
+    },
+    "output_tokens": 174,
+    "cost_usd": 0.035093,
+    "turns": 2,
+    "wall_s": 6.8,
+    "is_error": false,
+    "hook": [
+      {
+        "tool": "Bash",
+        "action": "rewritten",
+        "command": "curl -s http://127.0.0.1:46373/tests/fixtures/real/pypi-uv.html | grep -i \"curl.*sh\\|astral.sh/uv\" | head -20"
+      },
+      {
+        "tool": "Bash",
+        "action": "mediated",
+        "route": "trafilatura, dropped 47 hidden",
+        "tokens_before_est": 141737,
+        "tokens_after": 2286
+      }
+    ],
+    "repeat": 0
+  },
+  {
+    "task": "curl-numpy",
+    "arm": "off",
+    "correct": true,
+    "answer": "NumPy requires `pytest` and `hypothesis` to run its tests.",
+    "input_tokens": 30474,
+    "usage": {
+      "input_tokens": 4,
+      "cache_creation_input_tokens": 6345,
+      "cache_read_input_tokens": 24125,
+      "output_tokens": 195
+    },
+    "output_tokens": 195,
+    "cost_usd": 0.032163,
+    "turns": 2,
+    "wall_s": 5.6,
+    "is_error": false,
+    "hook": [],
+    "repeat": 0
+  },
+  {
+    "task": "curl-numpy",
+    "arm": "on",
+    "correct": true,
+    "answer": "NumPy requires `pytest` and `hypothesis` to run its test suite.",
+    "input_tokens": 218164,
+    "usage": {
+      "input_tokens": 26,
+      "cache_creation_input_tokens": 9385,
+      "cache_read_input_tokens": 208753,
+      "output_tokens": 2271
+    },
+    "output_tokens": 2271,
+    "cost_usd": 0.10205260000000001,
+    "turns": 14,
+    "wall_s": 36.0,
+    "is_error": false,
+    "hook": [
+      {
+        "tool": "Bash",
+        "action": "not-eligible",
+        "command": "curl -s http://127.0.0.1:46373/tests/fixtures/real/pypi-numpy.html -o /tmp/pypi-numpy.html && grep -i -A5 -B5 \"test\" /tmp/pypi-numpy.html | grep -iE \"pytest|hypothesis|requires|test\" | head -50"
+      },
+      {
+        "tool": "Bash",
+        "action": "not-eligible",
+        "command": "curl -s http://127.0.0.1:46373/tests/fixtures/real/pypi-numpy.html -o /tmp/pypi-numpy.html"
+      },
+      {
+        "tool": "Bash",
+        "action": "not-eligible",
+        "command": "curl -s http://127.0.0.1:46373/tests/fixtures/real/pypi-numpy.html -o /tmp/lt-curl-numpy-on-q7uu2_vp/pypi-numpy.html"
+      },
+      {
+        "tool": "Bash",
+        "action": "not-eligible",
+        "command": "grep -i -B3 -A3 \"to run the test\" /tmp/lt-curl-numpy-on-q7uu2_vp/pypi-numpy.html"
+      },
+      {
+        "tool": "Bash",
+        "action": "not-eligible",
+        "command": "grep -io \"pytest[a-zA-Z_-]*\\|hypothesis\" /tmp/lt-curl-numpy-on-q7uu2_vp/pypi-numpy.html | sort | uniq -c"
+      },
+      {
+        "tool": "Bash",
+        "action": "not-eligible",
+        "command": "grep -n -o '.\\{80\\}pytest.\\{80\\}\\|.\\{80\\}hypothesis.\\{80\\}' /tmp/lt-curl-numpy-on-q7uu2_vp/pypi-numpy.html"
+      },
+      {
+        "tool": "Bash",
+        "action": "not-eligible",
+        "command": "python3 -I -c \"\nimport re\nwith open('/tmp/lt-curl-numpy-on-q7uu2_vp/pypi-numpy.html') as f:\n    content = f.read()\nfor m in re.finditer(r'pytest|hypothesis', content, re.I):\n    s = max(0, m.start()-200)\n    e = min(len(content), m.end()+200)\n    print(content[s:e])\n    print('---')\n\"\n"
+      },
+      {
+        "tool": "Bash",
+        "action": "not-eligible",
+        "command": "python3 -I -c \"\nimport re\nwith open('/tmp/lt-curl-numpy-on-q7uu2_vp/pypi-numpy.html') as f:\n    content = f.read()\nfor m in re.finditer(r'pytest|hypothesis', content, re.I):\n    s = max(0, m.start()-200)\n    e = min(len(content), m.end()+200)\n    print(content[s:e])\n    print('---')\n\"\n"
+      },
+      {
+        "tool": "Bash",
+        "action": "not-eligible",
+        "command": "wc -l /tmp/lt-curl-numpy-on-q7uu2_vp/pypi-numpy.html; grep -n -c \"pytest\\|hypothesis\" /tmp/lt-curl-numpy-on-q7uu2_vp/pypi-numpy.html"
+      },
+      {
+        "tool": "Bash",
+        "action": "not-eligible",
+        "command": "grep -n \"pytest\\|hypothesis\" /tmp/lt-curl-numpy-on-q7uu2_vp/pypi-numpy.html"
+      }
+    ],
+    "repeat": 0
+  },
+  {
+    "task": "curl-botwall",
+    "arm": "off",
+    "correct": true,
+    "answer": "The page contains a bot-detection \"Client Challenge\" interstitial (JavaScript-based client challenge loading scripts), not the project's actual description.",
+    "input_tokens": 31484,
+    "usage": {
+      "input_tokens": 4,
+      "cache_creation_input_tokens": 7359,
+      "cache_read_input_tokens": 24121,
+      "output_tokens": 182
+    },
+    "output_tokens": 182,
+    "cost_usd": 0.0360882,
+    "turns": 2,
+    "wall_s": 5.6,
+    "is_error": false,
+    "hook": [],
+    "repeat": 0
+  },
+  {
+    "task": "curl-botwall",
+    "arm": "on",
+    "correct": true,
+    "answer": "The page is a Fastly \"Client Challenge\" bot-detection/JS-challenge page, not the actual PyPI project description.",
+    "input_tokens": 31572,
+    "usage": {
+      "input_tokens": 4,
+      "cache_creation_input_tokens": 7445,
+      "cache_read_input_tokens": 24123,
+      "output_tokens": 179
+    },
+    "output_tokens": 179,
+    "cost_usd": 0.03640260000000001,
+    "turns": 2,
+    "wall_s": 5.9,
+    "is_error": false,
+    "hook": [
+      {
+        "tool": "Bash",
+        "action": "rewritten",
+        "command": "curl -s http://127.0.0.1:46373/tests/fixtures/real/pypi-challenge.html"
+      },
+      {
+        "tool": "Bash",
+        "action": "passthrough",
+        "route": "trafilatura",
+        "tokens_before_est": 759,
+        "tokens_after": 0,
+        "reason": "page is a bot challenge or asks for JavaScript; nothing to extract from this HTML (live browser tabs are planned; for now save the page from your browser and pass the .html file)"
+      }
+    ],
+    "repeat": 0
+  },
+  {
+    "task": "pdf-paper",
+    "arm": "on",
+    "correct": true,
+    "answer": "The authors (Gal et al., describing TraceMonkey) report speedups of roughly 2x\u201320x for traceable programs generally, with up to 25x on the best benchmark (bitops-bitwise-and), and the abstract highlights \"speedups of 10x and more for certain benchmark programs.\"",
+    "input_tokens": 70083,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 30754,
+      "cache_read_input_tokens": 39323,
+      "output_tokens": 298
+    },
+    "output_tokens": 298,
+    "cost_usd": 0.1338726,
+    "turns": 3,
+    "wall_s": 10.7,
+    "is_error": false,
+    "hook": [
+      {
+        "tool": "Read",
+        "action": "mediated",
+        "route": "pdftotext",
+        "tokens_before_est": 35462,
+        "tokens_after": 20692
+      }
+    ],
+    "repeat": 1
+  },
+  {
+    "task": "pdf-paper",
+    "arm": "off",
+    "correct": true,
+    "answer": "The authors (TraceMonkey, a trace-based JIT for JavaScript) report overall speedups of 2x\u201320x over the baseline SpiderMonkey interpreter, with the best cases reaching up to 25x on integer-heavy benchmarks like `bitops-bitwise-and` and `bitops-3bit-bits-in-byte`.",
+    "input_tokens": 94818,
+    "usage": {
+      "input_tokens": 10,
+      "cache_creation_input_tokens": 24355,
+      "cache_read_input_tokens": 70453,
+      "output_tokens": 585
+    },
+    "output_tokens": 585,
+    "cost_usd": 0.1173806,
+    "turns": 5,
+    "wall_s": 11.8,
+    "is_error": false,
+    "hook": [],
+    "repeat": 1
+  },
+  {
+    "task": "pdf-scanned",
+    "arm": "on",
+    "correct": true,
+    "answer": "The invoice number is 2026-0417 and the total due is $1,140.00.",
+    "input_tokens": 45857,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 6509,
+      "cache_read_input_tokens": 39342,
+      "output_tokens": 244
+    },
+    "output_tokens": 244,
+    "cost_usd": 0.036356400000000004,
+    "turns": 3,
+    "wall_s": 9.2,
+    "is_error": false,
+    "hook": [
+      {
+        "tool": "Read",
+        "action": "mediated",
+        "route": "pdf-scanned->ocr",
+        "tokens_before_est": 2318,
+        "tokens_after": 49
+      }
+    ],
+    "repeat": 1
+  },
+  {
+    "task": "pdf-scanned",
+    "arm": "off",
+    "correct": true,
+    "answer": "Invoice 2026-0417 has a total due of $1,140.00.",
+    "input_tokens": 47444,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 8045,
+      "cache_read_input_tokens": 39393,
+      "output_tokens": 230
+    },
+    "output_tokens": 230,
+    "cost_usd": 0.0423706,
+    "turns": 3,
+    "wall_s": 6.0,
+    "is_error": false,
+    "hook": [],
+    "repeat": 1
+  },
+  {
+    "task": "shot-table",
+    "arm": "on",
+    "correct": true,
+    "answer": "$1,332,539,889",
+    "input_tokens": 80402,
+    "usage": {
+      "input_tokens": 10,
+      "cache_creation_input_tokens": 9533,
+      "cache_read_input_tokens": 70859,
+      "output_tokens": 634
+    },
+    "output_tokens": 634,
+    "cost_usd": 0.0586638,
+    "turns": 5,
+    "wall_s": 21.0,
+    "is_error": false,
+    "hook": [
+      {
+        "tool": "Read",
+        "action": "mediated",
+        "route": "ocr(conf=88, low=11%)",
+        "tokens_before_est": 1999,
+        "tokens_after": 87
+      },
+      {
+        "tool": "Read",
+        "action": "passthrough",
+        "reason": "re-read: agent asked for the original"
+      }
+    ],
+    "repeat": 1
+  },
+  {
+    "task": "shot-table",
+    "arm": "off",
+    "correct": true,
+    "answer": "$1,332,539,889",
+    "input_tokens": 47935,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 8644,
+      "cache_read_input_tokens": 39285,
+      "output_tokens": 185
+    },
+    "output_tokens": 185,
+    "cost_usd": 0.044295,
+    "turns": 3,
+    "wall_s": 4.2,
+    "is_error": false,
+    "hook": [],
+    "repeat": 1
+  },
+  {
+    "task": "shot-traceback",
+    "arm": "on",
+    "correct": true,
+    "answer": "A `ZeroDivisionError: division by zero` was raised, and in the first locals panel (`divide_all`), `result = 65536.0`.",
+    "input_tokens": 67364,
+    "usage": {
+      "input_tokens": 8,
+      "cache_creation_input_tokens": 12017,
+      "cache_read_input_tokens": 55339,
+      "output_tokens": 466
+    },
+    "output_tokens": 466,
+    "cost_usd": 0.0638118,
+    "turns": 5,
+    "wall_s": 18.1,
+    "is_error": false,
+    "hook": [
+      {
+        "tool": "Read",
+        "action": "mediated",
+        "route": "ocr(conf=92, low=2%)",
+        "tokens_before_est": 3063,
+        "tokens_after": 251
+      },
+      {
+        "tool": "Read",
+        "action": "passthrough",
+        "reason": "re-read: agent asked for the original"
+      }
+    ],
+    "repeat": 1
+  },
+  {
+    "task": "shot-traceback",
+    "arm": "off",
+    "correct": true,
+    "answer": "A `ZeroDivisionError` (\"division by zero\") was raised, and in the first (outermost) locals panel `result` is `65536.0` (the leftover value from the previous successful division, before the failing `(1, 0)` call).",
+    "input_tokens": 50505,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 11147,
+      "cache_read_input_tokens": 39352,
+      "output_tokens": 287
+    },
+    "output_tokens": 287,
+    "cost_usd": 0.0553404,
+    "turns": 4,
+    "wall_s": 7.8,
+    "is_error": false,
+    "hook": [],
+    "repeat": 1
+  },
+  {
+    "task": "curl-uv",
+    "arm": "on",
+    "correct": true,
+    "answer": "`curl -LsSf https://astral.sh/uv/install.sh | sh`",
+    "input_tokens": 30402,
+    "usage": {
+      "input_tokens": 4,
+      "cache_creation_input_tokens": 6275,
+      "cache_read_input_tokens": 24123,
+      "output_tokens": 207
+    },
+    "output_tokens": 207,
+    "cost_usd": 0.0320026,
+    "turns": 2,
+    "wall_s": 7.2,
+    "is_error": false,
+    "hook": [
+      {
+        "tool": "Bash",
+        "action": "rewritten",
+        "command": "curl -s http://127.0.0.1:46373/tests/fixtures/real/pypi-uv.html | grep -i \"curl\" | grep -i \"sh\" "
+      },
+      {
+        "tool": "Bash",
+        "action": "mediated",
+        "route": "trafilatura, dropped 47 hidden",
+        "tokens_before_est": 141737,
+        "tokens_after": 2286
+      }
+    ],
+    "repeat": 1
+  },
+  {
+    "task": "curl-uv",
+    "arm": "off",
+    "correct": true,
+    "answer": "```\ncurl -LsSf https://astral.sh/uv/install.sh | sh\n```",
+    "input_tokens": 30460,
+    "usage": {
+      "input_tokens": 4,
+      "cache_creation_input_tokens": 6331,
+      "cache_read_input_tokens": 24125,
+      "output_tokens": 184
+    },
+    "output_tokens": 184,
+    "cost_usd": 0.031997,
+    "turns": 2,
+    "wall_s": 16.4,
+    "is_error": false,
+    "hook": [],
+    "repeat": 1
+  },
+  {
+    "task": "curl-numpy",
+    "arm": "on",
+    "correct": true,
+    "answer": "NumPy requires **pytest** and **hypothesis** to run its tests.",
+    "input_tokens": 94934,
+    "usage": {
+      "input_tokens": 12,
+      "cache_creation_input_tokens": 7448,
+      "cache_read_input_tokens": 87474,
+      "output_tokens": 855
+    },
+    "output_tokens": 855,
+    "cost_usd": 0.0558608,
+    "turns": 6,
+    "wall_s": 17.5,
+    "is_error": false,
+    "hook": [
+      {
+        "tool": "Bash",
+        "action": "not-eligible",
+        "command": "curl -s http://127.0.0.1:46373/tests/fixtures/real/pypi-numpy.html -o /tmp/numpy_fetch_dir/pypi-numpy.html --create-dirs && grep -i -A5 -B5 \"pytest\\|hypothesis\" /tmp/numpy_fetch_dir/pypi-numpy.html | head -100"
+      },
+      {
+        "tool": "Bash",
+        "action": "not-eligible",
+        "command": "mkdir -p /tmp/numpy_fetch_dir && curl -s http://127.0.0.1:46373/tests/fixtures/real/pypi-numpy.html -o /tmp/numpy_fetch_dir/pypi-numpy.html"
+      },
+      {
+        "tool": "Bash",
+        "action": "not-eligible",
+        "command": "curl -s http://127.0.0.1:46373/tests/fixtures/real/pypi-numpy.html -o pypi-numpy.html"
+      }
+    ],
+    "repeat": 1
+  },
+  {
+    "task": "curl-numpy",
+    "arm": "off",
+    "correct": true,
+    "answer": "NumPy requires `pytest` and `hypothesis` to run its tests.",
+    "input_tokens": 99733,
+    "usage": {
+      "input_tokens": 12,
+      "cache_creation_input_tokens": 8629,
+      "cache_read_input_tokens": 91092,
+      "output_tokens": 1381
+    },
+    "output_tokens": 1381,
+    "cost_usd": 0.06656840000000001,
+    "turns": 6,
+    "wall_s": 21.6,
+    "is_error": false,
+    "hook": [],
+    "repeat": 1
+  },
+  {
+    "task": "curl-botwall",
+    "arm": "on",
+    "correct": true,
+    "answer": "The page is not the project's description but a JavaScript-based \"Client Challenge\" (bot-detection/anti-bot gate) page with no actual content.",
+    "input_tokens": 31568,
+    "usage": {
+      "input_tokens": 4,
+      "cache_creation_input_tokens": 7441,
+      "cache_read_input_tokens": 24123,
+      "output_tokens": 181
+    },
+    "output_tokens": 181,
+    "cost_usd": 0.0364066,
+    "turns": 2,
+    "wall_s": 6.3,
+    "is_error": false,
+    "hook": [
+      {
+        "tool": "Bash",
+        "action": "rewritten",
+        "command": "curl -s http://127.0.0.1:46373/tests/fixtures/real/pypi-challenge.html"
+      },
+      {
+        "tool": "Bash",
+        "action": "passthrough",
+        "route": "trafilatura",
+        "tokens_before_est": 759,
+        "tokens_after": 0,
+        "reason": "page is a bot challenge or asks for JavaScript; nothing to extract from this HTML (live browser tabs are planned; for now save the page from your browser and pass the .html file)"
+      }
+    ],
+    "repeat": 1
+  },
+  {
+    "task": "curl-botwall",
+    "arm": "off",
+    "correct": true,
+    "answer": "The page contains a JavaScript \"Client Challenge\" (anti-bot) interstitial that loads challenge scripts, not the project's actual description content.",
+    "input_tokens": 31493,
+    "usage": {
+      "input_tokens": 4,
+      "cache_creation_input_tokens": 7364,
+      "cache_read_input_tokens": 24125,
+      "output_tokens": 183
+    },
+    "output_tokens": 183,
+    "cost_usd": 0.036119,
+    "turns": 2,
+    "wall_s": 5.3,
+    "is_error": false,
+    "hook": [],
+    "repeat": 1
+  },
+  {
+    "task": "pdf-paper",
+    "arm": "off",
+    "correct": true,
+    "answer": "The authors (TraceMonkey) report overall speedups of 2x\u201320x on SunSpider benchmark programs relative to the baseline SpiderMonkey interpreter, with the best case (bitops-bitwise-and) reaching up to a 25x (actually ~25.47x) speedup.",
+    "input_tokens": 78761,
+    "usage": {
+      "input_tokens": 8,
+      "cache_creation_input_tokens": 24087,
+      "cache_read_input_tokens": 54666,
+      "output_tokens": 376
+    },
+    "output_tokens": 376,
+    "cost_usd": 0.1110572,
+    "turns": 4,
+    "wall_s": 9.0,
+    "is_error": false,
+    "hook": [],
+    "repeat": 2
+  },
+  {
+    "task": "pdf-paper",
+    "arm": "on",
+    "correct": true,
+    "answer": "The authors report speedups of 2x\u201320x (and up to 25x on bitops-bitwise-and, with speedups up to 10x or more for certain benchmark programs as highlighted in the abstract) achieved by their TraceMonkey trace-based JIT compiler over the baseline SpiderMonkey JavaScript interpreter.",
+    "input_tokens": 70115,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 30770,
+      "cache_read_input_tokens": 39339,
+      "output_tokens": 319
+    },
+    "output_tokens": 319,
+    "cost_usd": 0.1341498,
+    "turns": 3,
+    "wall_s": 10.0,
+    "is_error": false,
+    "hook": [
+      {
+        "tool": "Read",
+        "action": "mediated",
+        "route": "pdftotext",
+        "tokens_before_est": 35462,
+        "tokens_after": 20692
+      }
+    ],
+    "repeat": 2
+  },
+  {
+    "task": "pdf-scanned",
+    "arm": "off",
+    "correct": true,
+    "answer": "Invoice number 2026-0417 has a total due of 1,140.00.",
+    "input_tokens": 47334,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 7990,
+      "cache_read_input_tokens": 39338,
+      "output_tokens": 241
+    },
+    "output_tokens": 241,
+    "cost_usd": 0.0422496,
+    "turns": 3,
+    "wall_s": 6.2,
+    "is_error": false,
+    "hook": [],
+    "repeat": 2
+  },
+  {
+    "task": "pdf-scanned",
+    "arm": "on",
+    "correct": true,
+    "answer": "The invoice number is 2026-0417 and the total due is $1,140.00.",
+    "input_tokens": 45840,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 6501,
+      "cache_read_input_tokens": 39333,
+      "output_tokens": 241
+    },
+    "output_tokens": 241,
+    "cost_usd": 0.0362926,
+    "turns": 3,
+    "wall_s": 8.6,
+    "is_error": false,
+    "hook": [
+      {
+        "tool": "Read",
+        "action": "mediated",
+        "route": "pdf-scanned->ocr",
+        "tokens_before_est": 2318,
+        "tokens_after": 49
+      }
+    ],
+    "repeat": 2
+  },
+  {
+    "task": "shot-table",
+    "arm": "off",
+    "correct": true,
+    "answer": "$1,332,539,889",
+    "input_tokens": 47965,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 8659,
+      "cache_read_input_tokens": 39300,
+      "output_tokens": 201
+    },
+    "output_tokens": 201,
+    "cost_usd": 0.044518,
+    "turns": 3,
+    "wall_s": 5.4,
+    "is_error": false,
+    "hook": [],
+    "repeat": 2
+  },
+  {
+    "task": "shot-table",
+    "arm": "on",
+    "correct": true,
+    "answer": "$1,332,539,889",
+    "input_tokens": 64037,
+    "usage": {
+      "input_tokens": 8,
+      "cache_creation_input_tokens": 9132,
+      "cache_read_input_tokens": 54897,
+      "output_tokens": 376
+    },
+    "output_tokens": 376,
+    "cost_usd": 0.05128340000000001,
+    "turns": 4,
+    "wall_s": 12.5,
+    "is_error": false,
+    "hook": [
+      {
+        "tool": "Read",
+        "action": "mediated",
+        "route": "ocr(conf=88, low=11%)",
+        "tokens_before_est": 1999,
+        "tokens_after": 87
+      },
+      {
+        "tool": "Read",
+        "action": "passthrough",
+        "reason": "re-read: agent asked for the original"
+      }
+    ],
+    "repeat": 2
+  },
+  {
+    "task": "shot-traceback",
+    "arm": "off",
+    "correct": true,
+    "answer": "A `ZeroDivisionError: division by zero` was raised, and in the first locals panel `result = 65536.0`.",
+    "input_tokens": 50483,
+    "usage": {
+      "input_tokens": 6,
+      "cache_creation_input_tokens": 11137,
+      "cache_read_input_tokens": 39340,
+      "output_tokens": 248
+    },
+    "output_tokens": 248,
+    "cost_usd": 0.054908,
+    "turns": 4,
+    "wall_s": 7.0,
+    "is_error": false,
+    "hook": [],
+    "repeat": 2
+  },
+  {
+    "task": "shot-traceback",
+    "arm": "on",
+    "correct": true,
+    "answer": "A `ZeroDivisionError: division by zero` was raised, and in the first locals panel (frame `divide_all`) `result = 65536.0`.",
+    "input_tokens": 67382,
+    "usage": {
+      "input_tokens": 8,
+      "cache_creation_input_tokens": 12030,
+      "cache_read_input_tokens": 55344,
+      "output_tokens": 484
+    },
+    "output_tokens": 484,
+    "cost_usd": 0.0640448,
+    "turns": 5,
+    "wall_s": 17.4,
+    "is_error": false,
+    "hook": [
+      {
+        "tool": "Read",
+        "action": "mediated",
+        "route": "ocr(conf=92, low=2%)",
+        "tokens_before_est": 3063,
+        "tokens_after": 251
+      },
+      {
+        "tool": "Read",
+        "action": "passthrough",
+        "reason": "re-read: agent asked for the original"
+      }
+    ],
+    "repeat": 2
+  },
+  {
+    "task": "curl-uv",
+    "arm": "off",
+    "correct": true,
+    "answer": "```\ncurl -LsSf https://astral.sh/uv/install.sh | sh\n```",
+    "input_tokens": 84739,
+    "usage": {
+      "input_tokens": 10,
+      "cache_creation_input_tokens": 9935,
+      "cache_read_input_tokens": 74794,
+      "output_tokens": 988
+    },
+    "output_tokens": 988,
+    "cost_usd": 0.0645988,
+    "turns": 5,
+    "wall_s": 19.3,
+    "is_error": false,
+    "hook": [],
+    "repeat": 2
+  },
+  {
+    "task": "curl-uv",
+    "arm": "on",
+    "correct": true,
+    "answer": "`curl -LsSf https://astral.sh/uv/install.sh | sh`",
+    "input_tokens": 30384,
+    "usage": {
+      "input_tokens": 4,
+      "cache_creation_input_tokens": 6253,
+      "cache_read_input_tokens": 24127,
+      "output_tokens": 181
+    },
+    "output_tokens": 181,
+    "cost_usd": 0.0316554,
+    "turns": 2,
+    "wall_s": 6.5,
+    "is_error": false,
+    "hook": [
+      {
+        "tool": "Bash",
+        "action": "rewritten",
+        "command": "curl -s http://127.0.0.1:46373/tests/fixtures/real/pypi-uv.html | grep -o 'curl[^<\"]*uv[^<\"]*sh[^<\"]*' | head -5"
+      },
+      {
+        "tool": "Bash",
+        "action": "mediated",
+        "route": "trafilatura, dropped 47 hidden",
+        "tokens_before_est": 141737,
+        "tokens_after": 2286
+      }
+    ],
+    "repeat": 2
+  },
+  {
+    "task": "curl-numpy",
+    "arm": "off",
+    "correct": true,
+    "answer": "NumPy requires `pytest` and `hypothesis` to run its tests.",
+    "input_tokens": 184043,
+    "usage": {
+      "input_tokens": 22,
+      "cache_creation_input_tokens": 9380,
+      "cache_read_input_tokens": 174641,
+      "output_tokens": 2310
+    },
+    "output_tokens": 2310,
+    "cost_usd": 0.0955922,
+    "turns": 11,
+    "wall_s": 36.7,
+    "is_error": false,
+    "hook": [],
+    "repeat": 2
+  },
+  {
+    "task": "curl-numpy",
+    "arm": "on",
+    "correct": true,
+    "answer": "NumPy requires `pytest` and `hypothesis` to run its tests.",
+    "input_tokens": 30414,
+    "usage": {
+      "input_tokens": 4,
+      "cache_creation_input_tokens": 6283,
+      "cache_read_input_tokens": 24127,
+      "output_tokens": 200
+    },
+    "output_tokens": 200,
+    "cost_usd": 0.0319654,
+    "turns": 2,
+    "wall_s": 7.2,
+    "is_error": false,
+    "hook": [
+      {
+        "tool": "Bash",
+        "action": "rewritten",
+        "command": "curl -s http://127.0.0.1:46373/tests/fixtures/real/pypi-numpy.html | grep -i -A5 \"test\" | grep -i -E \"pytest|hypothesis\" | head -50"
+      },
+      {
+        "tool": "Bash",
+        "action": "mediated",
+        "route": "trafilatura, dropped 90 hidden",
+        "tokens_before_est": 238336,
+        "tokens_after": 829
+      }
+    ],
+    "repeat": 2
+  },
+  {
+    "task": "curl-botwall",
+    "arm": "off",
+    "correct": true,
+    "answer": "The page is titled \"Client Challenge\" and contains no project description at all\u2014it's a Fastly/Fastly-style bot-detection JS challenge page (loading `errors.js`/`script.js` with a CSP and a \"please enable JavaScript\" fallback) rather than any actual PyPI project content.",
+    "input_tokens": 31481,
+    "usage": {
+      "input_tokens": 4,
+      "cache_creation_input_tokens": 7358,
+      "cache_read_input_tokens": 24119,
+      "output_tokens": 231
+    },
+    "output_tokens": 231,
+    "cost_usd": 0.036573800000000004,
+    "turns": 2,
+    "wall_s": 6.6,
+    "is_error": false,
+    "hook": [],
+    "repeat": 2
+  },
+  {
+    "task": "curl-botwall",
+    "arm": "on",
+    "correct": true,
+    "answer": "The page contains a JavaScript-based \"Client Challenge\" (bot/anti-automation check) page, not the project's description.",
+    "input_tokens": 31569,
+    "usage": {
+      "input_tokens": 4,
+      "cache_creation_input_tokens": 7442,
+      "cache_read_input_tokens": 24123,
+      "output_tokens": 174
+    },
+    "output_tokens": 174,
+    "cost_usd": 0.0363406,
+    "turns": 2,
+    "wall_s": 6.4,
+    "is_error": false,
+    "hook": [
+      {
+        "tool": "Bash",
+        "action": "rewritten",
+        "command": "curl -s http://127.0.0.1:46373/tests/fixtures/real/pypi-challenge.html"
+      },
+      {
+        "tool": "Bash",
+        "action": "passthrough",
+        "route": "trafilatura",
+        "tokens_before_est": 759,
+        "tokens_after": 0,
+        "reason": "page is a bot challenge or asks for JavaScript; nothing to extract from this HTML (live browser tabs are planned; for now save the page from your browser and pass the .html file)"
+      }
+    ],
+    "repeat": 2
+  }
+]

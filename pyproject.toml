@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "leantext"
+version = "0.2.0"
+description = "Everything an agent reads, as clean Markdown. With proof of the tokens saved."
+readme = "README.md"
+license = {text = "Apache-2.0"}
+requires-python = ">=3.10"
+dependencies = [
+  "trafilatura>=1.8",
+  "markdownify>=0.12",
+  "markitdown>=0.1",
+  "pypdf>=4",
+  "pillow>=10",
+  "pytesseract>=0.3",
+  "pypdfium2>=4",
+]
+
+[project.optional-dependencies]
+tokens = ["tiktoken>=0.7"]
+anthropic = ["anthropic>=0.40"]
+dev = ["pytest>=8", "reportlab>=4"]
+
+[project.scripts]
+leantext = "leantext.cli:main"
+md = "leantext.cli:main"
+leantext-hook = "leantext.hook:main"
+
+[tool.setuptools.packages.find]
+include = ["leantext*"]
