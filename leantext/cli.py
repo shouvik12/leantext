@@ -18,7 +18,8 @@ from .router import InputError, convert
 
 
 def _report(res) -> str:
-    lines = [f"leantext report  ({res.kind}, via {res.method}{', cached' if res.cached else ''})",
+    what = "markdown served by the site" if res.method == "site-markdown" else f"{res.kind}, via {res.method}"
+    lines = [f"leantext report  ({what}{', cached' if res.cached else ''})",
              f"tokenizer: {res.tokenizer}" + ("  [approximate: chars/4]" if res.tokenizer == "estimate" else "")]
     for name, n in res.baselines.items():
         saved = 1 - res.out_tokens / n if n else 0
@@ -86,7 +87,8 @@ def main(argv: list[str] | None = None) -> int:
         print(_report(res), file=sys.stderr)
 
     if res.failed:
-        print("leantext: extraction failed: no content produced", file=sys.stderr)
+        why = f" ({res.fallback})" if getattr(res, "fallback", None) else ""
+        print(f"leantext: extraction failed: no content produced{why}", file=sys.stderr)
         code = 2
     elif res.suspicious and a.strict:
         code = 3
