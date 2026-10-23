@@ -50,8 +50,22 @@ def _pypdf(path: str) -> str:
     return "\f".join((p.extract_text() or "") for p in PdfReader(path).pages)
 
 
+OFFICE_ADDON_HINT = ("Office files need the optional add-on: re-run ./install.sh --office, "
+                     "or: uv tool install --force \"leantext[office]\"  (or install pandoc)")
+
+
+def office_available() -> bool:
+    """True if Word/Excel/PowerPoint files can be converted (MarkItDown or pandoc present)."""
+    import importlib.util
+
+    return importlib.util.find_spec("markitdown") is not None or shutil.which("pandoc") is not None
+
+
 def _markitdown(path: str) -> str:
-    from markitdown import MarkItDown
+    try:
+        from markitdown import MarkItDown
+    except ImportError:
+        raise RuntimeError(OFFICE_ADDON_HINT) from None
 
     return MarkItDown().convert(path).text_content or ""
 
