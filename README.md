@@ -18,6 +18,7 @@ Fewer tokens, same answers, and when a conversion looks wrong, the agent gets th
 - ✅ **21/21 tasks still answered correctly** in end-to-end Claude Code runs with leantext on
 - 🔌 **Automatic in Claude Code.** A hook converts the agent's own `Read` and `curl` calls. Nothing to remember.
 - 🛟 **Fails open.** Bot walls, weak OCR, missing code or tables, no real saving: the original goes through untouched.
+- 🧾 **Shows its receipts.** Every decision is logged with a reason, and `--report` prints tokens before and after.
 - 🪶 **Light install.** 39 MB on a Mac, no system packages needed, about 20 seconds on a normal connection.
 
 <p align="center"><img src="assets/how-it-works.svg" alt="Inputs go into leantext, which extracts, checks and measures. Safe conversions reach the agent as lean Markdown; anything suspicious reaches it as the original." width="100%"></p>
@@ -62,7 +63,7 @@ tail -3 ~/.cache/leantext/hook.jsonl     # each decision, with the reason
 | `curl -s URL`, `curl -s URL \| grep …`, `wget -qO- URL` | runs `leantext URL` instead, keeping any text filters |
 | anything else (source code, `curl -o`, `curl \| jq`, POSTs) | nothing |
 
-By default the hook converts **web pages, scanned PDFs and Office files**, the kinds that win in the [end-to-end benchmark](#end-to-end-in-claude-code). Text PDFs and screenshots are opt-in with `LEANTEXT_HOOK_KINDS=all`. Turn the hook off anytime with `LEANTEXT_HOOK=off`.
+By default the hook converts **web pages, scanned PDFs and Office files**, the kinds that win in the [end-to-end benchmark](#end-to-end-in-claude-code). Text PDFs and screenshots are opt-in with `LEANTEXT_HOOK_KINDS=all`. Re-reading the same file in a session returns the original. Turn the hook off anytime with `LEANTEXT_HOOK=off`.
 
 ### 2. From the command line
 
@@ -207,7 +208,18 @@ For example: `uv tool install "leantext[tokens,office] @ git+https://github.com/
 
 > **Slow install?** Your network's route to PyPI may be congested even when other sites are fast. Try another network, or point uv at a nearby PyPI mirror with `UV_DEFAULT_INDEX`.
 
+> A bare `pip install` into Homebrew's Python fails with `externally-managed-environment`. Use the installer, uv, pipx, or a virtual environment.
+
 To remove everything, run `./uninstall.sh`.
+
+## Why leantext
+
+Converters already exist: MarkItDown, Jina Reader, Firecrawl, Pandoc. leantext uses some of them, and adds what an agent needs on top:
+
+1. **It sits under the agent.** The hook converts reads the agent was already making. You don't rely on the agent remembering to call a tool.
+2. **Cost-aware routing.** The cheapest extractor that still works wins. A vision model is paid for only when OCR fails.
+3. **It knows when not to convert.** Every output is checked against its source, and anything suspicious goes through as the original.
+4. **Measured, not claimed.** `--report` and a public benchmark compare the same questions with and without leantext, including the cases where it loses.
 
 ## 🛡️ What leantext won't hide
 
@@ -222,7 +234,7 @@ Smaller context is useful. Incorrect context is not. leantext is built to step a
 **Known limits.** These are real, and worth checking if your task depends on them:
 
 - **PyPI sidebars** (latest version, supported Python versions, release date) are dropped. Check the page, or run `pip index versions <pkg>`.
-- **Client-rendered sites** (React apps, dashboards) ship an empty page shell, so a plain fetch can't see their content. leantext flags this rather than pretending.
+- **Client-rendered sites** (React apps, dashboards) ship an empty page shell, so a plain fetch can't see their content. leantext flags this rather than pretending. Live-tab mode, on the roadmap, will fix it.
 - **Bot walls** (Cloudflare, PyPI's challenge page) exit with code 2. Save the page from your browser and pass the `.html` file.
 - **Some data tables** (Wikipedia, MDN) and **code inside JavaScript components** (react.dev) can be dropped. Both are detected, and the original goes through.
 - **OCR flattens code indentation.** It's fine for errors, logs and tables; for code, prefer the source file or vision.
@@ -240,6 +252,13 @@ flowchart LR
     E -- no --> O
     E -- yes --> L[Lean Markdown]
 ```
+
+**Flagged as suspicious when:**
+- code blocks, data tables or headings in the source are missing from the output
+- the page's own title is missing from the top of the output (navigation kept instead of content)
+- the output is under 10% of the main-content text, garbled, or empty
+- the page is a bot challenge or a JavaScript shell whose content loads at runtime
+- PDF text has glued-together words, or the pages are mostly graphics
 
 Every decision is logged with its reason:
 
@@ -310,6 +329,18 @@ leantext hook-config                      # print the Claude Code hook block
 - **People building agent pipelines** who want a conversion layer that reports what it did.
 
 If your inputs are already concise, leantext will save little, and it will tell you so.
+
+## Roadmap
+
+- [x] CLI and router for web pages, PDFs, screenshots and Office files
+- [x] Token counting and savings report
+- [x] OCR → vision fallback
+- [x] Claude Code hook with an end-to-end on/off benchmark
+- [x] Fallback gates: edit-safe passthrough, title check, time budget, savings floor
+- [x] Slim install: 39 MB on a Mac, optional add-ons
+- [ ] A "kept" score in `--report`: code, numbers and links checked against the source
+- [ ] MCP server
+- [ ] Live browser tabs via CDP/Playwright
 
 ## Contributing
 
