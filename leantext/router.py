@@ -15,7 +15,7 @@ from .extractors import html as html_x
 from .extractors import image as image_x
 from .extractors import pdf as pdf_x
 
-VERSION_SALT = "leantext-0.2.4"
+VERSION_SALT = "leantext-0.2.5"
 UA = "Mozilla/5.0 (compatible; leantext/0.2; +https://github.com/shouvik12/leantext)"
 MAX_BYTES = 25 * 1024 * 1024
 
@@ -26,6 +26,8 @@ HTML_EXT = {".html", ".htm", ".xhtml"}
 # ---------------------------------------------------------------- fallback rules
 MIN_SAVINGS = 0.15          # lean output must be at least 15% cheaper than the raw read
 TIME_BUDGET_S = 20.0        # max for extraction; past this the read goes raw
+OCR_BUDGET_S = 90.0         # images and PDFs: OCR is slower. A real 1,999-token screenshot took 21s
+                            # on macOS with Apple Vision's two passes and was dropped at 20s.
 MIN_IMAGE_TEXT_COVERAGE = 0.15  # images whose text covers less than this are mostly visual
 LOG_PATH = os.path.expanduser(os.environ.get("LEANTEXT_LOG", "~/.leantext/fallbacks.jsonl"))
 
@@ -63,8 +65,14 @@ class Result:
 
 # ---------------------------------------------------------------- input resolution
 
+# Ask for Markdown first. Sites that publish it for agents (Stripe's API reference, among others)
+# return their own clean version; everyone else ignores the preference and returns HTML.
+ACCEPT = "text/markdown, text/x-markdown;q=0.95, text/html;q=0.9, */*;q=0.8"
+MARKDOWN_TYPES = {"text/markdown", "text/x-markdown"}
+
+
 def _fetch(url: str) -> tuple[bytes, str]:
-    req = urllib.request.Request(url, headers={"User-Agent": UA, "Accept": "*/*"})
+    req = urllib.request.Request(url, headers={"User-Agent": UA, "Accept": ACCEPT})
     with urllib.request.urlopen(req, timeout=30) as r:  # noqa: S310 - user-supplied URL is the point
         ctype = (r.headers.get("Content-Type") or "").split(";")[0].strip().lower()
         data = r.read(MAX_BYTES + 1)
@@ -115,7 +123,34 @@ def _pdf_page_image_tokens(path: str) -> int:
 
 
 def _baselines(kind: str, raw: bytes | None, path: str | None) -> dict[str, int]:
+    """Token counts for the ways an agent could read this without leantext. Never raises:
+    a truncated PDF download crashed the whole command here with a pypdf traceback."""
     b: dict[str, int] = {}
+    try:
+        _fill_baselines(b, kind, raw, path)
+    except Exception:  # noqa: BLE001 - a baseline must never break a read
+        pass
+    return b
+
+
+def _html_baselines(url: str) -> dict[str, int]:
+    """When a site served its own Markdown, measure the HTML page an agent would get from curl.
+
+    Costs one extra request, so it only runs for --report/--json, never in a plain conversion.
+    """
+    try:
+        req = urllib.request.Request(url, headers={"User-Agent": UA, "Accept": "text/html,*/*;q=0.8"})
+        with urllib.request.urlopen(req, timeout=30) as r:  # noqa: S310
+            ctype = (r.headers.get("Content-Type") or "").lower()
+            data = r.read(MAX_BYTES + 1)
+        if "html" not in ctype or len(data) > MAX_BYTES:
+            return {}
+        return _baselines("html", data, None)
+    except Exception:  # noqa: BLE001 - a baseline must never break a read
+        return {}
+
+
+def _fill_baselines(b: dict[str, int], kind: str, raw: bytes | None, path: str | None) -> None:
     if kind == "html" and raw is not None:
         page = raw.decode("utf-8", "replace")
         b["raw HTML"] = tokens.count(page)
@@ -134,7 +169,6 @@ def _baselines(kind: str, raw: bytes | None, path: str | None) -> dict[str, int]
         b["image input"] = image_x.image_tokens(path)
     elif raw is not None:
         b["raw"] = tokens.count(raw.decode("utf-8", "replace"))
-    return b
 
 
 # ---------------------------------------------------------------- fallback helpers
@@ -190,7 +224,10 @@ def _extract_bounded(args: tuple, budget: float) -> Result:
     import subprocess
 
     try:
-        proc = subprocess.run([sys.executable, "-m", "leantext.router", "--worker"],
+        # -I: don't put the current directory on sys.path. Run from ~/Downloads with an html.py
+        # there, the worker imported it instead of Python's own html module and every
+        # extraction failed. The working directory itself is unchanged, so relative paths still work.
+        proc = subprocess.run([sys.executable, "-I", "-m", "leantext.router", "--worker"],
                               input=pickle.dumps(args), capture_output=True, timeout=budget)
     except subprocess.TimeoutExpired:
         raise TimeoutError(f"extraction exceeded {budget:.0f}s budget") from None
@@ -329,13 +366,17 @@ def convert(
         elif hit:
             res = Result(**{k: v for k, v in hit.items() if k in Result.__dataclass_fields__})
             res.cached = True
+        elif kind == "text" and ctype in MARKDOWN_TYPES:
+            # The site's own Markdown is already the lean version: pass it through as content.
+            res = _extract(kind, target, raw, path, False, allow_vision, keep_hidden)
+            res.method = "site-markdown"
         elif kind == "text":
             res = _extract(kind, target, raw, path, False, allow_vision, keep_hidden)
             res.raw, res.fallback = True, "plain text passthrough"
         else:
             try:
                 res = _extract_bounded((kind, target, raw, path, False, allow_vision, keep_hidden),
-                                       budget_s)
+                                       budget_s if kind == "html" else max(budget_s, OCR_BUDGET_S))
             except TimeoutError as e:
                 res = step_aside(str(e))
             except Exception as e:  # noqa: BLE001
@@ -362,7 +403,10 @@ def convert(
         res.out_tokens = tokens.count(res.markdown) if res.markdown else 0
         if report:
             res.tokenizer = tokens.backend()
-            res.baselines = _baselines(kind, raw, path)
+            if is_url and res.method == "site-markdown":
+                res.baselines = _html_baselines(target)
+            else:
+                res.baselines = _baselines(kind, raw, path)
         res.elapsed_s = round(time.monotonic() - start, 3)
         _log(res, baseline)
         return res
