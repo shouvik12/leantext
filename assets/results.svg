@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 488" width="960" height="488" role="img" aria-labelledby="t d">
+<title id="t">leantext results: tokens before and after</title>
+<desc id="d">For each tested input, the full bar is the naive Markdown or text the agent would otherwise read, and the coloured part is what leantext sends. Savings range from 99% on PyPI pages to 3% on a research paper PDF.</desc>
+<style>
+:root{--bg:#fff;--track:#eaeef2;--bar:#0969da;--ink:#1f2328;--muted:#59636e;--hi:#1a7f37;--lo:#9a6700}
+@media (prefers-color-scheme: dark){:root{--bg:#0d1117;--track:#21262d;--bar:#4493f8;--ink:#e6edf3;--muted:#9198a1;--hi:#3fb950;--lo:#d29922}}
+text{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;fill:var(--ink)}
+.n{font-size:14px;font-weight:600} .k{font-size:11.5px;fill:var(--muted)} .v{font-size:12.5px;fill:var(--muted);font-variant-numeric:tabular-nums}
+.p{font-size:15px;font-weight:700;font-variant-numeric:tabular-nums} .hi{fill:var(--hi)} .lo{fill:var(--lo)}
+.h{font-size:20px;font-weight:700} .sub{font-size:13px;fill:var(--muted)}
+</style>
+<rect width="960" height="488" rx="14" fill="var(--bg)"/>
+<text class="h" x="30" y="40">Tokens your agent reads: before → with leantext</text>
+<text class="sub" x="30" y="64">Full bar = whole page as Markdown (or plain text for the PDF). Blue = what leantext sends.</text>
+
+<text class="n" x="30" y="107">PyPI: NumPy</text><text class="k" x="30" y="121">web page</text><rect x="300" y="96" width="470" height="16" rx="8" fill="var(--track)"/><rect x="300" y="96" width="3.8" height="16" rx="8" fill="var(--bar)"/><text class="v" x="784" y="109">92,348 → 755</text><text class="p hi" x="930" y="109" text-anchor="end">−99%</text>
+<text class="n" x="30" y="141">PyPI: uv</text><text class="k" x="30" y="155">web page</text><rect x="300" y="130" width="470" height="16" rx="8" fill="var(--track)"/><rect x="300" y="130" width="27.2" height="16" rx="8" fill="var(--bar)"/><text class="v" x="784" y="143">43,177 → 2,501</text><text class="p hi" x="930" y="143" text-anchor="end">−94%</text>
+<text class="n" x="30" y="175">Next.js README</text><text class="k" x="30" y="189">web page</text><rect x="300" y="164" width="470" height="16" rx="8" fill="var(--track)"/><rect x="300" y="164" width="28.7" height="16" rx="8" fill="var(--bar)"/><text class="v" x="784" y="177">7,394 → 452</text><text class="p hi" x="930" y="177" text-anchor="end">−94%</text>
+<text class="n" x="30" y="209">Screenshot: rich table</text><text class="k" x="30" y="223">image</text><rect x="300" y="198" width="470" height="16" rx="8" fill="var(--track)"/><rect x="300" y="198" width="29.9" height="16" rx="8" fill="var(--bar)"/><text class="v" x="784" y="211">1,999 → 127</text><text class="p hi" x="930" y="211" text-anchor="end">−94%</text>
+<text class="n" x="30" y="243">Screenshot: rich traceback</text><text class="k" x="30" y="257">image</text><rect x="300" y="232" width="470" height="16" rx="8" fill="var(--track)"/><rect x="300" y="232" width="47.3" height="16" rx="8" fill="var(--bar)"/><text class="v" x="784" y="245">3,063 → 308</text><text class="p hi" x="930" y="245" text-anchor="end">−90%</text>
+<text class="n" x="30" y="277">Stripe API docs</text><text class="k" x="30" y="291">web page</text><rect x="300" y="266" width="470" height="16" rx="8" fill="var(--track)"/><rect x="300" y="266" width="141.8" height="16" rx="8" fill="var(--bar)"/><text class="v" x="784" y="279">3,958 → 1,194</text><text class="p hi" x="930" y="279" text-anchor="end">−70%</text>
+<text class="n" x="30" y="311">MDN: Promise</text><text class="k" x="30" y="325">web page</text><rect x="300" y="300" width="470" height="16" rx="8" fill="var(--track)"/><rect x="300" y="300" width="296.3" height="16" rx="8" fill="var(--bar)"/><text class="v" x="784" y="313">11,901 → 7,503</text><text class="p lo" x="930" y="313" text-anchor="end">−37%</text>
+<text class="n" x="30" y="345">OpenAI Python README</text><text class="k" x="30" y="359">web page</text><rect x="300" y="334" width="470" height="16" rx="8" fill="var(--track)"/><rect x="300" y="334" width="329.4" height="16" rx="8" fill="var(--bar)"/><text class="v" x="784" y="347">13,856 → 9,712</text><text class="p lo" x="930" y="347" text-anchor="end">−30%</text>
+<text class="n" x="30" y="379">Python tutorial</text><text class="k" x="30" y="393">web page</text><rect x="300" y="368" width="470" height="16" rx="8" fill="var(--track)"/><rect x="300" y="368" width="422.6" height="16" rx="8" fill="var(--bar)"/><text class="v" x="784" y="381">11,950 → 10,746</text><text class="p lo" x="930" y="381" text-anchor="end">−10%</text>
+<text class="n" x="30" y="413">Attention Is All You Need</text><text class="k" x="30" y="427">PDF</text><rect x="300" y="402" width="470" height="16" rx="8" fill="var(--track)"/><rect x="300" y="402" width="454.7" height="16" rx="8" fill="var(--bar)"/><text class="v" x="784" y="415">10,168 → 9,838</text><text class="p lo" x="930" y="415" text-anchor="end">−3%</text>
+<text class="sub" x="30" y="466">Counted with leantext --report on real pages. PyPI pages are mostly hidden download lists; a paper is mostly content.</text>
+</svg>

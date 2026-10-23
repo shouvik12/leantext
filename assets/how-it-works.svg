@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 440" width="960" height="440" role="img" aria-labelledby="t d">
+  <title id="t">How leantext works</title>
+  <desc id="d">Web pages, PDFs, screenshots and Office files go into leantext, which extracts, checks and measures. Safe conversions reach the agent as lean Markdown; anything suspicious reaches it as the original.</desc>
+  <style>
+    :root { --bg:#ffffff; --card:#f6f8fa; --line:#d0d7de; --ink:#1f2328; --muted:#59636e; --brand:#0969da; --brandsoft:#ddf4ff; --ok:#1a7f37; --oksoft:#dafbe1; --warn:#9a6700; --warnsoft:#fff8c5; }
+    @media (prefers-color-scheme: dark) {
+      :root { --bg:#0d1117; --card:#161b22; --line:#30363d; --ink:#e6edf3; --muted:#9198a1; --brand:#4493f8; --brandsoft:#0c2d6b; --ok:#3fb950; --oksoft:#04260f; --warn:#d29922; --warnsoft:#3a2a00; }
+    }
+    .bg { fill: var(--bg); }
+    .card { fill: var(--card); stroke: var(--line); stroke-width: 1.2; }
+    .core { fill: var(--brandsoft); stroke: var(--brand); stroke-width: 1.6; }
+    .step { fill: var(--bg); stroke: var(--brand); stroke-width: 1.2; }
+    .okbox { fill: var(--oksoft); stroke: var(--ok); stroke-width: 1.6; }
+    .warnbox { fill: var(--warnsoft); stroke: var(--warn); stroke-width: 1.6; }
+    .agent { fill: var(--card); stroke: var(--ink); stroke-width: 1.6; }
+    text { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; fill: var(--ink); }
+    .h { font-size: 15px; font-weight: 600; }
+    .s { font-size: 12.5px; fill: var(--muted); }
+    .big { font-size: 20px; font-weight: 700; fill: var(--brand); }
+    .label { font-size: 11.5px; font-weight: 600; letter-spacing: .06em; fill: var(--muted); }
+    .num { font-size: 12.5px; font-weight: 600; font-variant-numeric: tabular-nums; }
+    .okt { fill: var(--ok); } .warnt { fill: var(--warn); }
+    .wire { fill: none; stroke: var(--muted); stroke-width: 1.6; }
+    .wok { fill: none; stroke: var(--ok); stroke-width: 2; }
+    .wwarn { fill: none; stroke: var(--warn); stroke-width: 2; stroke-dasharray: 6 4; }
+  </style>
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#8c959f"/></marker>
+    <marker id="aok" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#2da44e"/></marker>
+    <marker id="awarn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#bf8700"/></marker>
+  </defs>
+  <rect class="bg" width="960" height="440" rx="14"/>
+
+  <!-- inputs -->
+  <text class="label" x="30" y="40">WHAT YOUR AGENT READS</text>
+  <rect class="card" x="30" y="56" width="200" height="72" rx="10"/>
+  <text class="h" x="46" y="84">Web page</text><text class="s" x="46" y="106">docs, READMEs, PyPI</text>
+  <rect class="card" x="30" y="140" width="200" height="72" rx="10"/>
+  <text class="h" x="46" y="168">PDF</text><text class="s" x="46" y="190">text or scanned</text>
+  <rect class="card" x="30" y="224" width="200" height="72" rx="10"/>
+  <text class="h" x="46" y="252">Screenshot</text><text class="s" x="46" y="274">errors, tables, terminals</text>
+  <rect class="card" x="30" y="308" width="200" height="72" rx="10"/>
+  <text class="h" x="46" y="336">Office file</text><text class="s" x="46" y="358">docx, xlsx, pptx</text>
+
+  <path class="wire" d="M230 92 C 262 92, 262 218, 296 218" marker-end="url(#a)"/>
+  <path class="wire" d="M230 176 C 262 176, 262 218, 296 218" marker-end="url(#a)"/>
+  <path class="wire" d="M230 260 C 262 260, 262 218, 296 218" marker-end="url(#a)"/>
+  <path class="wire" d="M230 344 C 262 344, 262 218, 296 218" marker-end="url(#a)"/>
+
+  <!-- core -->
+  <rect class="core" x="300" y="56" width="300" height="324" rx="14"/>
+  <text class="big" x="324" y="92">leantext</text>
+  <text class="s" x="324" y="114">runs before the agent reads anything</text>
+  <rect class="step" x="324" y="132" width="252" height="66" rx="9"/>
+  <text class="h" x="340" y="158">1 · Extract</text><text class="s" x="340" y="180">cheapest route that works first</text>
+  <rect class="step" x="324" y="210" width="252" height="66" rx="9"/>
+  <text class="h" x="340" y="236">2 · Check</text><text class="s" x="340" y="258">code, tables, headings, title all there?</text>
+  <rect class="step" x="324" y="288" width="252" height="66" rx="9"/>
+  <text class="h" x="340" y="314">3 · Measure</text><text class="s" x="340" y="336">at least 15% fewer tokens?</text>
+
+  <!-- outcomes -->
+  <path class="wok" d="M600 160 C 640 160, 640 120, 676 120" marker-end="url(#aok)"/>
+  <rect class="okbox" x="680" y="70" width="250" height="100" rx="12"/>
+  <text class="h okt" x="700" y="100">✓ Lean Markdown</text>
+  <text class="s" x="700" y="122">only the content, verified</text>
+  <text class="num" x="700" y="150">92,348 → 755 tokens</text>
+
+  <path class="wwarn" d="M600 300 C 640 300, 640 330, 676 330" marker-end="url(#awarn)"/>
+  <rect class="warnbox" x="680" y="280" width="250" height="100" rx="12"/>
+  <text class="h warnt" x="700" y="310">↺ The original, untouched</text>
+  <text class="s" x="700" y="332">if any check fails or nothing</text>
+  <text class="s" x="700" y="350">is saved; never worse than today</text>
+
+  <!-- agent -->
+  <path class="wire" d="M805 170 L805 202" marker-end="url(#a)"/>
+  <path class="wire" d="M805 280 L805 252" marker-end="url(#a)"/>
+  <rect class="agent" x="730" y="204" width="150" height="46" rx="23"/>
+  <text class="h" x="805" y="232" text-anchor="middle">Your agent</text>
+
+  <text class="s" x="30" y="418">Claude Code: the hook does this automatically on Read and curl.  Anywhere else: run  leantext &lt;url or file&gt;.</text>
+</svg>
