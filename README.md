@@ -39,6 +39,17 @@ uv tool install "leantext[tokens] @ git+https://github.com/shouvik12/leantext"
 
 The `tokens` extra adds tiktoken for accurate token counts. Use `leantext[tokens,anthropic]` for the vision fallback and exact Claude counts; those need `ANTHROPIC_API_KEY`.
 
+Optional add-ons, kept out of the default install so it stays small (about 39 MB on a Mac):
+
+| Extra | Adds | Size |
+|---|---|---|
+| `office` | Word, Excel, PowerPoint and EPUB files (MarkItDown) | ~40 MB |
+| `ocr` | RapidOCR as a backup OCR engine on macOS (Linux and Windows get it by default) | ~80 MB |
+
+For example: `uv tool install "leantext[tokens,office] @ git+https://github.com/shouvik12/leantext"`, or `./install.sh --office` from a clone.
+
+> Slow install? Your network's route to PyPI may be congested even when other sites are fast. Try another network, or point uv at a nearby PyPI mirror with `UV_DEFAULT_INDEX`.
+
 > A bare `pip install` into Homebrew's Python fails with `externally-managed-environment`. Use pipx, uv, or a virtual environment.
 
 **3. Try it**
@@ -47,7 +58,7 @@ The `tokens` extra adds tiktoken for accurate token counts. Use `leantext[tokens
 leantext https://docs.python.org/3/tutorial/controlflow.html   # web page
 leantext paper.pdf                                             # text or scanned PDF
 leantext screenshot.png                                        # OCR, vision only if OCR is weak
-leantext spec.docx                                             # Office files
+leantext spec.docx                                             # Office files (needs the office extra)
 leantext https://pypi.org/project/numpy/ --report > /dev/null  # see the savings
 ```
 
@@ -173,9 +184,9 @@ jq -r .reason ~/.leantext/fallbacks.jsonl | sort | uniq -c
 |---|---|---|
 | HTML / blog | drop content hidden by default (`hidden`, `aria-hidden`, `display:none`, unselected ARIA tab panels) → trafilatura → code blocks restored verbatim with language tags → links resolved to absolute URLs | whole-page Markdown with menus trimmed above the title heading |
 | Bot challenge / JS-only shell | exit 2 with the reason, instead of returning "please enable JavaScript" as content | — |
-| PDF with a text layer | first engine whose output isn't glued together: pdftotext → pypdf → MarkItDown | — |
+| PDF with a text layer | first engine whose output isn't glued together: pdftotext → pypdf → MarkItDown (if installed) | — |
 | Scanned PDF | render each page, then the image route | — |
-| Office (docx, pptx, xlsx, epub) | MarkItDown | pandoc |
+| Office (docx, pptx, xlsx, epub) | MarkItDown (`office` extra) | pandoc |
 | Image | Tesseract: crop window shadows, invert dark backgrounds, upscale small images | vision model if OCR is empty, mean confidence < 70, or > 25% of words are low-confidence |
 | Anything else | passthrough | — |
 

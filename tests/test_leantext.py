@@ -233,6 +233,13 @@ def test_ocr_engine_order(monkeypatch):
     assert image.engines() == ["rapidocr"]
 
 
+import importlib.util as _ilu
+
+needs_rapidocr = pytest.mark.skipif(_ilu.find_spec("rapidocr_onnxruntime") is None,
+                                    reason="RapidOCR not installed (default on macOS; add with the ocr extra)")
+
+
+@needs_rapidocr
 def test_ocr_falls_back_when_engine_fails(monkeypatch):
     from leantext.extractors import image
 
@@ -242,6 +249,7 @@ def test_ocr_falls_back_when_engine_fails(monkeypatch):
     assert engine == "rapidocr" and "Production Budget" in text
 
 
+@needs_rapidocr
 def test_rapidocr_without_tesseract(monkeypatch):
     monkeypatch.setenv("LEANTEXT_OCR", "rapidocr")
     md = convert(str(R / "rich-table.png"), use_cache=False, allow_vision=False).markdown
@@ -507,3 +515,42 @@ def test_images_get_a_longer_time_budget(monkeypatch):
     monkeypatch.setattr(router, "_extract_bounded", fake)
     router.convert(str(R / "rich-table.png"), use_cache=False, allow_vision=False)
     assert seen["budget"] >= 60
+
+
+# ---- optional add-ons -------------------------------------------------------------------
+def test_office_without_addon_explains_fix(tmp_path, monkeypatch):
+    """No MarkItDown and no pandoc: an Office file fails with the exact fix, not a bare ImportError."""
+    import builtins
+    import shutil as _shutil
+
+    from leantext.extractors import pdf
+
+    real_import = builtins.__import__
+
+    def no_markitdown(name, *a, **k):
+        if name == "markitdown":
+            raise ImportError("No module named 'markitdown'")
+        return real_import(name, *a, **k)
+
+    monkeypatch.setattr(builtins, "__import__", no_markitdown)
+    monkeypatch.setattr(pdf.shutil, "which", lambda cmd: None if cmd == "pandoc" else _shutil.which(cmd))
+    doc = tmp_path / "spec.docx"
+    doc.write_bytes(b"PK\x03\x04 not really a docx")
+    md, method, warnings, _ = pdf.extract(str(doc))
+    assert md == "" and method == "none"
+    assert any("--office" in w and "leantext[office]" in w for w in warnings)
+
+
+def test_mac_install_skips_rapidocr_and_office():
+    """The default install stays small: RapidOCR only off macOS, MarkItDown only via the office extra."""
+    try:
+        import tomllib
+    except ImportError:  # Python 3.10
+        pytest.skip("tomllib needs Python 3.11+")
+    proj = tomllib.loads((Path(__file__).parent.parent / "pyproject.toml").read_text())["project"]
+    deps = proj["dependencies"]
+    assert not any(d.startswith("markitdown") for d in deps)
+    rapid = [d for d in deps if d.startswith("rapidocr")]
+    assert rapid and "sys_platform != 'darwin'" in rapid[0]
+    assert any(d.startswith("markitdown") for d in proj["optional-dependencies"]["office"])
+    assert any(d.startswith("rapidocr") for d in proj["optional-dependencies"]["ocr"])

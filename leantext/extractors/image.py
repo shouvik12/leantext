@@ -94,7 +94,11 @@ def ocr_with_engine(path: str) -> tuple[str, float, int, float, str]:
             errors.append(f"{name}: {e}")
             continue
         return _fix_common(text), mean, words, low, name
-    raise RuntimeError("no OCR engine available (" + "; ".join(errors) + ")")
+    hint = ""
+    if sys.platform == "darwin":
+        hint = (". To add a backup OCR engine: brew install tesseract, "
+                "or re-run ./install.sh --ocr")
+    raise RuntimeError("no OCR engine available (" + "; ".join(errors) + ")" + hint)
 
 
 APPLE_AGREE_MIN = 0.90  # fast vs accurate pass must agree this closely, or the read counts as weak

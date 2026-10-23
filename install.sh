@@ -1,15 +1,21 @@
 #!/usr/bin/env bash
 # leantext installer
-# Usage: ./install.sh            (asks before touching Claude Code settings)
+# Usage: ./install.sh            (asks about Office support and the Claude Code hook)
 #        ./install.sh --yes      (sets up the Claude Code hook without asking)
 #        ./install.sh --no-hook  (skips the Claude Code hook)
+#        ./install.sh --office   (adds Word/Excel/PowerPoint support, ~40 MB more)
+#        ./install.sh --ocr      (adds RapidOCR as a backup OCR engine on macOS)
 set -euo pipefail
 
 HOOK_MODE="ask"
+OFFICE_MODE="ask"
+EXTRAS="tokens"
 for arg in "$@"; do
   case "$arg" in
     --yes|-y)  HOOK_MODE="yes" ;;
     --no-hook) HOOK_MODE="no" ;;
+    --office)  OFFICE_MODE="yes" ;;
+    --ocr)     EXTRAS="$EXTRAS,ocr" ;;
     *) echo "Unknown option: $arg"; exit 1 ;;
   esac
 done
@@ -51,10 +57,24 @@ uv tool update-shell >/dev/null 2>&1 || true
 ok "uv ready (~/.local/bin is on PATH for new terminals)"
 
 # 3. leantext itself, on a Python version its dependencies support
+if [ "$OFFICE_MODE" = "ask" ] && [ -t 0 ]; then
+  printf "\nAdd support for Word, Excel and PowerPoint files? (about 40 MB more to download) [y/N] "
+  read -r reply
+  case "$reply" in [yY]*) OFFICE_MODE="yes" ;; *) OFFICE_MODE="no" ;; esac
+fi
+[ "$OFFICE_MODE" = "yes" ] && EXTRAS="$EXTRAS,office"
+
 step "Installing leantext"
-uv tool install --force --python "$PYTHON_VERSION" "${REPO_DIR}[tokens]"
+uv tool install --force --python "$PYTHON_VERSION" "${REPO_DIR}[${EXTRAS}]"
 command -v leantext >/dev/null || fail "leantext installed but isn't on PATH. Open a new terminal and run: leantext --help"
 ok "leantext installed"
+if [ "$OFFICE_MODE" = "yes" ]; then
+  ok "Office files: Word, Excel, PowerPoint supported"
+elif command -v pandoc >/dev/null; then
+  ok "Office files: via pandoc (for MarkItDown instead, re-run with --office)"
+else
+  ok "Office files: not installed (add later with: ./install.sh --office)"
+fi
 
 # 3b. Warm up OCR. On macOS the first Apple Vision call waits ~30s while the system loads its
 #     text-recognition models; doing it here keeps that wait out of the user's first real read.
