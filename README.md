@@ -1,4 +1,4 @@
-<p align="center"><img src="assets/logo.svg" alt="leantext" width="360"></p>
+<p align="center"><img src="https://raw.githubusercontent.com/shouvik12/leantext/main/assets/logo.svg" alt="leantext" width="360"></p>
 
 <h3 align="center">Your coding agent reads the web. Make it read less.</h3>
 
@@ -21,7 +21,7 @@ Fewer tokens, same answers, and when a conversion looks wrong, the agent gets th
 - 🧾 **Shows its receipts.** Every decision is logged with a reason, and `--report` prints tokens before and after.
 - 🪶 **Light install.** 39 MB on a Mac, no system packages needed, about 20 seconds on a normal connection.
 
-<p align="center"><img src="assets/how-it-works.svg" alt="Inputs go into leantext, which extracts, checks and measures. Safe conversions reach the agent as lean Markdown; anything suspicious reaches it as the original." width="100%"></p>
+<p align="center"><img src="https://raw.githubusercontent.com/shouvik12/leantext/main/assets/how-it-works.svg" alt="Inputs go into leantext, which extracts, checks and measures. Safe conversions reach the agent as lean Markdown; anything suspicious reaches it as the original." width="100%"></p>
 
 ## The problem
 
@@ -121,7 +121,7 @@ Useful flags: `--raw` skips conversion, `--strict` exits with code 3 when the ou
 
 Every number here comes from `leantext --report` on real inputs. We show the whole range, including the inputs where leantext saves little.
 
-<p align="center"><img src="assets/results.svg" alt="Tokens before and after leantext for ten real inputs, from 99% saved on PyPI NumPy to 3% on a research paper PDF." width="100%"></p>
+<p align="center"><img src="https://raw.githubusercontent.com/shouvik12/leantext/main/assets/results.svg" alt="Tokens before and after leantext for ten real inputs, from 99% saved on PyPI NumPy to 3% on a research paper PDF." width="100%"></p>
 
 | Input | Before | With leantext | Saved |
 |---|---:|---:|---:|
