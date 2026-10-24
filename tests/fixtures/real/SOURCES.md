@@ -13,3 +13,4 @@ Captured 2026-10-19. Each one exposed a bug in leantext that a test now covers.
 | rich-table.png | https://github.com/Textualize/rich (imgs/) | MIT | dim/colored text lost by fixed-threshold binarisation; mean confidence hid the failure |
 | rich-traceback.png | https://github.com/Textualize/rich (imgs/) | MIT | 0/20 key strings with fixed threshold; transparent window shadow broke Otsu |
 | rich-syntax.png, rich-markdown.png | https://github.com/Textualize/rich (imgs/) | MIT | benchmark inputs (OCR flattens code indentation; see README) |
+- python-pathlib.html: docs.python.org/3/library/pathlib.html, built from CPython main Doc/ with Sphinx (Oct 2026)

@@ -9,7 +9,11 @@ import re
 
 _FENCE = re.compile(r"^(```|~~~)", re.M)
 _INDENTED_CODE = re.compile(r"(?:^(?: {4}|\t).+\n?){2,}", re.M)
-_MD_TABLE_SEP = re.compile(r"^\s*\|?\s*:?-{3,}:?\s*(\|\s*:?-{3,}:?\s*)+\|?\s*$", re.M)
+# Separator row of a Markdown table. Two or more columns, or one column with both outer pipes
+# ("|---|"): MDN's "Specifications" table has a single column.
+_MD_TABLE_SEP = re.compile(
+    r"^\s*(?:\|?\s*:?-{3,}:?\s*(\|\s*:?-{3,}:?\s*)+\|?|\|\s*:?-{3,}:?\s*\|)\s*$", re.M
+)
 _MD_HEADING = re.compile(r"^#{1,6}\s", re.M)
 
 

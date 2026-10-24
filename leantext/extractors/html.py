@@ -146,6 +146,13 @@ def normalize_structure(html: str, url: str | None = None) -> str:
         div.getparent().replace(div, pre)
         changed = True
 
+    # Node.js API docs: each function's "Added in" line and version History table sit in
+    # <div class="api_metadata">. trafilatura reads "metadata" in a class as boilerplate and
+    # drops the box. It's part of the API reference, so clear the class.
+    for div in root.xpath('//div[contains(concat(" ", @class, " "), " api_metadata ")]'):
+        del div.attrib["class"]
+        changed = True
+
     for h in root.xpath("//h1|//h2|//h3|//h4|//h5|//h6"):
         links = h.xpath(".//a")
         text = h.text_content().strip()
@@ -250,6 +257,169 @@ def absolutize_links(html: str, url: str) -> str:
     return lh.tostring(root, encoding="unicode")
 
 
+# --- Block shielding ---------------------------------------------------------------------------
+# trafilatura scores and rewrites the page before we see it. Two things it gets wrong on API
+# reference pages:
+#   - Code inside definition lists (<dl><dd>, the Sphinx API layout used by docs.python.org) is
+#     flattened into the surrounding paragraph: "\>>> PurePath('setup.py') # Running on a Unix
+#     machine PurePosixPath('setup.py') Each element of...". pathlib kept 14 of 83 blocks intact.
+#   - Data tables in nested or collapsed markup (Node's per-function "History" tables) are dropped.
+# So each <pre> and each data table is swapped for a placeholder paragraph before extraction and
+# put back verbatim afterwards. trafilatura still decides what is main content: a placeholder in
+# the sidebar is dropped along with the sidebar.
+
+_TOKEN = "LTXBLK{:05d}Z"
+_TOKEN_RE = re.compile(r"\\?LTXBLK(\d{5})Z")
+_SPHINX_LANG = re.compile(r"\bhighlight-([\w+#-]+)")
+_LANG_ALIASES = {"python3": "python", "py": "python", "default": "", "none": "", "text": "",
+                 "sh": "bash", "shell": "bash", "js": "javascript", "ts": "typescript"}
+
+
+def _block_lang(pre) -> str:
+    """Language from <pre>/<code> classes, then from a Sphinx wrapper <div class="highlight-x">."""
+    from lxml import html as lh
+
+    head = lh.tostring(pre, encoding="unicode")[:400]
+    m = _OPEN.match(head)
+    if m:
+        lm = _LANG.search(m.group(0))
+        if lm:
+            lang = lm.group(1) or lm.group(2)
+            return _LANG_ALIASES.get(lang.lower(), lang)
+    for anc in list(pre.iterancestors())[:3]:
+        sm = _SPHINX_LANG.search(anc.get("class") or "")
+        if sm:
+            lang = sm.group(1)
+            return _LANG_ALIASES.get(lang.lower(), lang)
+    return ""
+
+
+def _fence(code: str, lang: str) -> str:
+    ticks = "```"
+    while ticks in code:
+        ticks += "`"
+    return f"{ticks}{lang}\n{code}\n{ticks}"
+
+
+def _is_data_table(t) -> bool:
+    headed = bool(t.xpath(".//th | .//thead | ./caption"))
+    nested = bool(t.xpath("ancestor::table | .//table"))
+    return headed or not nested
+
+
+def _table_md(t) -> str | None:
+    """A data table as a Markdown pipe table, or None when it doesn't fit one."""
+    from lxml import html as lh
+
+    rows = []
+    for tr in t.xpath(".//tr"):
+        cells = tr.xpath("./th|./td")
+        if not cells:
+            continue
+        row = []
+        for c in cells:
+            inner = htmllib.escape(c.text or "") + "".join(
+                lh.tostring(k, encoding="unicode") for k in c)
+            txt = markdownify(inner, heading_style="ATX") if inner.strip() else ""
+            txt = " ".join(txt.split()).replace("|", "\\|")
+            row.append(txt)
+        rows.append(row)
+    if not rows or not any(any(c for c in r) for r in rows):
+        return None
+    width = max(len(r) for r in rows)
+    rows = [r + [""] * (width - len(r)) for r in rows]
+    caption = t.xpath("./caption")
+    out = [f"*{' '.join(caption[0].text_content().split())}*", ""] if caption else []
+    out.append("| " + " | ".join(rows[0]) + " |")
+    out.append("|" + "|".join(["---"] * width) + "|")
+    out += ["| " + " | ".join(r) + " |" for r in rows[1:]]
+    return "\n".join(out)
+
+
+def shield_blocks(html: str, url: str | None = None) -> tuple[str, dict[int, str]]:
+    """Replace <pre> blocks and data tables with placeholder paragraphs.
+
+    Returns (html_with_placeholders, {index: markdown}). Tables that contain code are left as
+    tables (their code is shielded on its own) since a fence can't live in a table cell.
+    """
+    from lxml import etree
+    from lxml import html as lh
+
+    try:
+        root = lh.document_fromstring(html)
+    except (etree.ParserError, ValueError):
+        return html, {}
+    blocks: dict[int, str] = {}
+
+    def swap(el, md: str) -> None:
+        n = len(blocks)
+        blocks[n] = md
+        p = lh.Element("p")
+        p.text = _TOKEN.format(n)
+        p.tail = el.tail
+        el.getparent().replace(el, p)
+
+    # Collapsed <details> boxes are dropped whole by trafilatura. Node's API docs keep a version
+    # "History" table in one per function (116 of 123 tables on fs.html). When a box holds a
+    # table or code, unwrap it into plain blocks so what it holds is kept like any other block.
+    for d in list(root.iter("details")):
+        if not d.xpath(".//table | .//pre"):
+            continue
+        d.tag = "div"
+        d.attrib.pop("open", None)
+        for s in d.xpath("./summary"):
+            s.tag = "p"
+
+    for t in list(root.iter("table")):
+        if t.getparent() is None or any(a.tag == "p" and (a.text or "").startswith("LTXBLK")
+                                         for a in t.iterancestors()):
+            continue
+        if not _is_data_table(t) or t.xpath(".//pre") or t.xpath("ancestor::table"):
+            continue
+        md = _table_md(t)
+        if md:
+            swap(t, md)
+
+    for pre in list(root.iter("pre")):
+        if pre.getparent() is None:
+            continue
+        code = pre.text_content().strip("\n")
+        if not code.strip():
+            continue
+        target = pre
+        # Sphinx: <div class="highlight-x"><div class="highlight"><pre>. Swap the wrapper so no
+        # empty divs are left behind.
+        parent = pre.getparent()
+        if parent.tag == "div" and len(parent) == 1 and "highlight" in (parent.get("class") or ""):
+            target = parent
+            gp = parent.getparent()
+            if gp is not None and gp.tag == "div" and len(gp) == 1 and \
+                    _SPHINX_LANG.search(gp.get("class") or ""):
+                target = gp
+        swap_lang = _block_lang(pre)
+        swap(target, _fence(code, swap_lang))
+
+    if not blocks:
+        return html, {}
+    return lh.tostring(root, encoding="unicode"), blocks
+
+
+def unshield_blocks(md: str, blocks: dict[int, str]) -> str:
+    """Put shielded blocks back, each on its own lines so text around it stays readable."""
+    if not blocks:
+        return md
+
+    def repl(m: re.Match) -> str:
+        block = blocks.get(int(m.group(1)))
+        return m.group(0) if block is None else f"\n\n{block}\n\n"
+
+    md = _TOKEN_RE.sub(repl, md)
+    # A placeholder trafilatura glued into a sentence leaves trailing spaces at the split.
+    md = re.sub(r"[ \t]+\n", "\n", md)
+    md = re.sub(r"(\n\n) (?=\S)", r"\1", md)
+    return squeeze_blank_lines(md)
+
+
 def extract(html: str, url: str | None = None, keep_hidden: bool = False) -> tuple[str, str, str]:
     """Return (markdown, method, html_actually_used)."""
     removed = 0
@@ -262,8 +432,9 @@ def extract(html: str, url: str | None = None, keep_hidden: bool = False) -> tup
     if url:
         html = absolutize_links(html, url)
 
+    shielded, blocks = shield_blocks(html, url)
     md = trafilatura.extract(
-        html,
+        shielded,
         url=url,
         output_format="markdown",
         include_tables=True,
@@ -274,7 +445,8 @@ def extract(html: str, url: str | None = None, keep_hidden: bool = False) -> tup
         favor_recall=True,
     )
     if md and md.strip():
-        md = _restore_lists(html, _restore_code(html, md))
+        md = unshield_blocks(_restore_code(html, md), blocks)
+        md = _restore_lists(html, md)
         return md.strip() + "\n", "trafilatura" + note, html
 
     body = _CHROME.sub("", html)

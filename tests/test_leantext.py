@@ -554,3 +554,12 @@ def test_mac_install_skips_rapidocr_and_office():
     assert rapid and "sys_platform != 'darwin'" in rapid[0]
     assert any(d.startswith("markitdown") for d in proj["optional-dependencies"]["office"])
     assert any(d.startswith("rapidocr") for d in proj["optional-dependencies"]["ocr"])
+
+
+def test_sphinx_code_in_definition_lists_kept_verbatim():
+    # docs.python.org puts examples inside <dl><dd>; trafilatura flattened 69 of 83 into prose.
+    r = convert(str(R / "python-pathlib.html"), use_cache=False)
+    assert r.suspicious == []
+    assert r.markdown.count("```python\n") >= 80
+    assert ">>> PurePath('setup.py')      # Running on a Unix machine\nPurePosixPath('setup.py')" in r.markdown
+    assert "LTXBLK" not in r.markdown
