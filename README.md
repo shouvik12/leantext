@@ -1,3 +1,4 @@
+[![Watch leantext in action](https://img.youtube.com/vi/lywymRPpiVU/maxresdefault.jpg)](https://www.youtube.com/watch?v=lywymRPpiVU)
 <p align="center"><img src="https://raw.githubusercontent.com/shouvik12/leantext/main/assets/logo.svg" alt="leantext" width="360"></p>
 
 <h3 align="center">Your coding agent reads the web. Make it read less.</h3>
